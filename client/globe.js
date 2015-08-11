@@ -134,7 +134,7 @@ DAT.Globe = function(container, opts) {
 
         overlayMesh = new THREE.Mesh(geometry, overlayMaterial);
         overlayMesh.rotation.y = Math.PI;
-        overlayMesh.scale.set(1.01, 1.01, 1.01);
+        overlayMesh.scale.set(1.001, 1.001, 1.001);
         scene.add(overlayMesh);
       });
     }

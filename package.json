@@ -25,9 +25,7 @@
     "lastfmapi": "0.0.6",
     "lodash": "^3.10.1",
     "q": "^1.4.1",
-    "spotify-web-api-node": "^2.1.0"
-  },
-  "devDependencies": {
+    "spotify-web-api-node": "^2.1.0",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-concat": "^2.6.0",

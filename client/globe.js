@@ -71,6 +71,10 @@ DAT.Globe = function(container, opts) {
   var camera, scene, renderer, w, h;
   var mesh, atmosphere, point;
 
+  // animation flags
+  var isSpinning = false;
+  var hasEntered = false;
+
   var overRenderer;
 
   var curZoomSpeed = 0;
@@ -369,24 +373,42 @@ DAT.Globe = function(container, opts) {
     render();
   }
 
+  function spin() {
+    rotation.y += 10;
+  }
+
   function render() {
-    zoom(curZoomSpeed);
 
-    rotation.x += (target.x - rotation.x) * 0.1;
-    rotation.y += (target.y - rotation.y) * 0.1;
-    distance += (distanceTarget - distance) * 0.3;
+    if (!hasEntered) {
+      zoom(curZoomSpeed);
 
-    camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
-    camera.position.y = distance * Math.sin(rotation.y);
-    camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
+      rotation.x += (target.x - rotation.x) * 0.1;
+      rotation.y += (target.y - rotation.y) * 0.1;
+      distance += (distanceTarget - distance) * 0.3;
 
-    camera.lookAt(mesh.position);
+      camera.position.x = distance * Math.sin(rotation.x) * Math.cos(rotation.y);
+      camera.position.y = distance * Math.sin(rotation.y);
+      camera.position.z = distance * Math.cos(rotation.x) * Math.cos(rotation.y);
 
+      camera.lookAt(mesh.position);
+
+      // have we reached target rotation?
+//      if(??) {
+//        hasEntered = true;
+//      }
+    }
+
+//    if (isSpinning) {
+//      spin();
+//    }
+
+    isSpinning = true;
     renderer.render(scene, camera);
   }
 
   init();
   this.animate = animate;
+  this.isSpinning = isSpinning;
 
 
   this.__defineGetter__('time', function() {

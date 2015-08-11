@@ -18,6 +18,7 @@
   "homepage": "https://github.com/HackOutWest15/sprinkles#readme",
   "dependencies": {
     "body-parser": "^1.13.3",
+    "echojs": "^0.1.4",
     "express": "^4.13.3",
     "lastfmapi": "0.0.6"
   }

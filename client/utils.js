@@ -66,6 +66,11 @@ function geodecoder(features) {
 function mapTexture(geojson, color, strokeColor) {
   var texture, context, canvas;
 
+  // map hackery
+  var projection = d3.geo.equirectangular()
+    .translate([1024, 512])
+    .scale(325);
+
   canvas = d3.select("body").append("canvas")
     .style("display", "none")
     .attr("width", "2048px")

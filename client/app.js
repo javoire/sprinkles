@@ -10,11 +10,6 @@ if (!Detector.webgl) {
   var getButton = document.getElementById('getButton');
   var start = document.getElementById('start');
 
-  // map hackery
-  var projection = d3.geo.equirectangular()
-    .translate([1024, 512])
-    .scale(325);
-
   var fetchData = function(event){
     event.preventDefault();
     var nick = nickInput.value || 'eshuu';

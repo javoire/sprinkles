@@ -6,12 +6,12 @@ function memoize(fn) {
 
     while (len--) {
       cur = args[len];
-      key += (cur === Object(cur))? JSON.stringify(cur): cur;
+      key += (cur === Object(cur)) ? JSON.stringify(cur) : cur;
 
       fn.memoize || (fn.memoize = {});
     }
 
-    return (key in fn.memoize)? fn.memoize[key]:
+    return (key in fn.memoize) ? fn.memoize[key] :
       fn.memoize[key] = fn.apply(this, args);
   };
 }
@@ -36,7 +36,7 @@ function geodecoder(features) {
 
       for (var i = 0; i < features.length; i++) {
         country = features[i];
-        if(country.geometry.type === 'Polygon') {
+        if (country.geometry.type === 'Polygon') {
           match = pointInPolygon(country.geometry.coordinates[0], [lng, lat]);
           if (match) {
             return {

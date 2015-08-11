@@ -118,21 +118,23 @@ DAT.Globe = function(container, opts) {
     scene.add(mesh);
 
     // overlay sphere
-    if (opts.overlayTexture) {
-      uniforms = THREE.UniformsUtils.clone(shader.uniforms);
-      uniforms['texture'].value = opts.overlayTexture;
+    if (opts.overlayTextures) {
+      opts.overlayTextures.forEach(function (overlayTexture) {
+        uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+        uniforms['texture'].value = overlayTexture;
 
-      overlayMaterial = new THREE.MeshBasicMaterial({
-        map: opts.overlayTexture,
-        transparent: true
+
+        overlayMaterial = new THREE.MeshBasicMaterial({
+          map: overlayTexture,
+          transparent: true
+        });
+
+        overlayMesh = new THREE.Mesh(geometry, overlayMaterial);
+        overlayMesh.rotation.y = Math.PI;
+        overlayMesh.scale.set(1.01, 1.01, 1.01);
+        scene.add(overlayMesh);
       });
-
-      overlayMesh = new THREE.Mesh(geometry, overlayMaterial);
-      overlayMesh.rotation.y = Math.PI;
-      overlayMesh.scale.set( 1.01, 1.01, 1.01 );
-      scene.add(overlayMesh);
     }
-
 
     // atmoSPHERE (lol)
     shader = Shaders['atmosphere'];

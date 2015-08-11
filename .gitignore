@@ -3,4 +3,5 @@
 node_modules
 bower_components
 public/all.css
+public/vendor.js
 public/all.js

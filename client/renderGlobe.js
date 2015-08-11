@@ -11,16 +11,17 @@ function renderUserDataOnGlobe(userCountryData, worldData) {
   var baseGreen = 189;
   var baseBlue = 89;
   var textures = [];
-  var rgb = d3.rgb(baseRed, baseGreen, baseBlue);
-  userCountryData.sort(function(a, b) {
+  userCountryData.sort(function (a, b) {
     return b.percent - a.percent;
   });
+  var maxval = userCountryData[0].percent * 100;
   userCountryData.forEach(function (country) {
     var countryGeojson = geo.find(country.country);
     if (countryGeojson) {
+      var alpha = country.percent * 100 / maxval;
+      var rgb = 'rgba(' + baseRed + ', ' + baseGreen + ', ' + baseBlue + ', ' + alpha +')';
       console.log(rgb);
-      textures.push(mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black'));
-      rgb = rgb.darker();
+      textures.push(mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb , 'black'));
     }
   });
 

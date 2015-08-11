@@ -11,7 +11,7 @@ if (!Detector.webgl) {
     d3.select("#loading").transition().duration(500)
       .style("opacity", 0).remove();
 
-    fetch('/api/javoire').then(function(a){
+    fetch('/api/users/javoire').then(function(a){
       return a.json();
     }).then(function(res){
       var countries = topojson.feature(data, data.objects.countries);

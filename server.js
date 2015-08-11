@@ -32,7 +32,7 @@ var router = express.Router();
 
 router.get('/users/:user/:period?', function (req, res) {
   var period = req.params.period || 'overall';
-  lfm.user.getTopArtists({user: req.params.user, period: period, limit: 50}, function (err, artists) {
+  lfm.user.getTopArtists({user: req.params.user, period: period, limit: 100}, function (err, artists) {
     var promises = [];
     if (err) {
       return console.log('Falied: ' + err);

@@ -13,7 +13,13 @@ gulp.task('scripts', function () {
     .pipe(concat('vendor.js'))
     .pipe(gulp.dest('./public/'));
 
-  gulp.src(['client/**/*.js'])
+  gulp.src([
+      'client/Detector.js',
+      'client/globe.js',
+      'client/countriesTopList.js',
+      'client/utils.js',
+      'client/app.js'
+    ])
     .pipe(concat('all.js'))
     .pipe(gulp.dest('./public/'));
 });

@@ -24,7 +24,6 @@ if (!Detector.webgl) {
       start.classList.add('remove');
     }, 400);
 
-
     fetch(apiUrl + nick).then(function(a){
       return a.json();
     }).then(function(res){

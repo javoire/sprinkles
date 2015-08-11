@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var LastfmAPI = require('lastfmapi');
 var echojs = require('echojs');
 var Q = require('q');
+var _ = require('lodash');
 
 // server our public shitz
 app.use(express.static('public'));
@@ -55,14 +56,18 @@ router.get('/:user/:period?', function (req, res) {
       )
     });
     Q.all(promises).then(function (artists) {
-      return res.json(artists.filter(function (artist) {
-        return artist
-      }));
+      var response = {metadata: {}};
+      artists = _.compact(artists);
+      response['artists'] = artists;
+      response['metadata']['countrypercent'] = _.map(_.countBy(artists, "country"), function (value, key) {
+        return {country: key, plays: value, percent: value / artists.length}
+      });
+      return res.json(response)
     });
   });
 });
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();

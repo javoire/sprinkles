@@ -1,5 +1,5 @@
 function welcomeScreen() {
   // elements
-  var getButton = document.getElementById('getButton');
-  getButton.addEventListener('click', fetchData.bind(this));
+  var form = document.getElementById('form');
+  form.addEventListener('submit', fetchData.bind(this));
 }

@@ -4,7 +4,7 @@ function fetchData(event){
   d3.json('data/world.json', function (err, worldData) {
 
     var nickInput = document.getElementById('nickInput');
-    var start = document.getElementById('start');
+    var start = document.getElementById('start') || document.getElementById('welcome');
     var apiUrl = '/api/users/';
     var nick = nickInput.value || 'eshuu';
 

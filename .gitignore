@@ -2,3 +2,5 @@
 .idea
 node_modules
 bower_components
+public/all.css
+public/all.js

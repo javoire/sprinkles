@@ -18,7 +18,7 @@ var echo = echojs({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;        // set our port
+var port = process.env.PORT || 8880;        // set our port
 
 var router = express.Router();
 
@@ -31,6 +31,11 @@ router.get('/:user', function(req, res) {
     });
   });
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.use('/api', router);
 

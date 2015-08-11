@@ -24,15 +24,7 @@ function renderUserDataOnGlobe(userCountryData, worldData) {
     }
   });
 
-  // google stuff
-  var map = document.getElementById('map');
-  var globe = new DAT.Globe(map, {
-    myCoolTexture: mapTexture(countries, '#222', 'black'),
-    overlayTextures: textures
-  });
-  console.log(globe);
-
-  globe.animate();
+  globe.updateOverlays(textures);
 
   countriesTopList(userCountryData);
 
@@ -45,7 +37,6 @@ function renderGlobe(worldData) {
   var globe = new DAT.Globe(map, {
     myCoolTexture: mapTexture(countries, '#222', 'black')
   });
-  globe.animate();
-
+  return globe;
   document.body.style.backgroundImage = 'none'; // remove loading
 }

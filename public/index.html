@@ -1,62 +1,35 @@
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>WebGL Globe</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="all.css">
+    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <style>
+      body {
+        font-family: 'Abel', sans-serif;
+      }
+    </style>
+  </head>
+  <body>
 
-  <title>Sprinkles</title>
-  <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-  <style>
-    html {
-      font-family: 'Abel', sans-serif;
-    }
-  </style>
-  <!-- <link rel="stylesheet" href="style.css"> -->
-
-</head>
-<body>
-  <h1>Sprinkle the world with music</h1>
-  <form>
-    <input id="nickInput" type="text" placeholder="Your last.fm nick">
-    <!-- <input type="range" 1w, 1mo, 3, 6, 12, overall> -->
-    <button id="getButton">GET</button>
-  </form>
-
-  <div>
-  <h2>Resultat</h2>
-  <ul id="artists"></ul>
+  <div id="start">
+    <h1>Sprinkle the world with music</h1>
+    <form>
+      <input id="nickInput" type="text" placeholder="Your last.fm nick">
+      <!-- <input type="range" 1w, 1mo, 3, 6, 12, overall> -->
+      <button id="getButton">SPRINKLE</button>
+    </form>
   </div>
 
-  <script>
-  var apiUrl = '/api/';
-  var artistsHolder = document.getElementById('artists');
-  var nickInput = document.getElementById('nickInput');
-  var getButton = document.getElementById('getButton');
+  <div id="container">
+    <div id="country-list">
+      <h2>These are your top countries, javoire</h2>
+      <ul></ul>
+    </div>
+  </div>
 
-
-  var plotIt = function(artists){
-    artistsHolder.innerHTML = '';
-
-    artists.forEach(function(artist){
-      var li = document.createElement('li');
-      li.innerHTML = artist.artist + ' - ' + artist.country;
-      artistsHolder.appendChild(li);
-    })
-  };
-
-  var fetchData = function(event){
-    event.preventDefault();
-    var nick = nickInput.value || 'eshuu';
-
-    fetch(apiUrl + nick).then(function(a){
-      return a.json();
-    }).then(function(b){
-      plotIt(b);
-    });
-  };
-
-  getButton.addEventListener('click', fetchData);
-
-  </script>
-</body>
+  <script type="text/javascript" src="vendor.js"></script>
+  <script type="text/javascript" src="all.js"></script>
+  </body>
 </html>

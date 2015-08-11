@@ -1,0 +1,12 @@
+{
+  "name": "sprinkles",
+  "version": "0.0.1",
+  "homepage": "https://github.com/HackOutWest15/sprinkles",
+  "license": "MIT",
+  "dependencies": {
+    "d3": "~3.5.6",
+    "three.js": "~0.71.0",
+    "tweenjs": "*",
+    "topojson": "~1.6.19"
+  }
+}

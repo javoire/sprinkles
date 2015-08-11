@@ -1,5 +1,6 @@
 html {
     height: 100%;
+    margin: 0;
 }
 body {
     margin: 0;
@@ -19,3 +20,61 @@ a {
 a:hover {
     text-decoration: underline;
 }
+
+
+#start {
+    box-sizing: border-box;
+    height: 100vh;
+    width: 100vw;
+
+    padding: 30px;
+    background-color: rgba(46, 189, 89, 1);
+
+    opacity: 1;
+    transform: translate3d(0, 0, );
+    transition: all 400ms ease-out;
+    will-change: opacity, transform;
+
+}
+
+#start h1 {
+    text-align: center;
+}
+
+#start form {
+    text-align: center;
+}
+
+#start input {
+    margin: 0 auto;
+    padding: 13px 32px;
+    font-size: 2em;
+    border-radius: 3px;
+    border: solid 1px #d5d5d5;
+    outline: 0;
+    width: 200px;
+    background: #FFFFFF;
+}
+
+#start button {
+    text-align: center;
+    border: 0;
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    transform: translateY(-5px);
+    background: white;
+    color: rgba(46, 189, 89, 1);
+    font-weight: bold;
+}
+
+#start.fade {
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+#start.remove {
+    display: none;
+}
+
+#start:not(.remove) ~ #container { display: none; }

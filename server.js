@@ -26,8 +26,9 @@ var port = process.env.PORT || 8880;        // set our port
 
 var router = express.Router();
 
-router.get('/:user', function (req, res) {
-  lfm.user.getTopArtists({'user': req.params.user, 'period': 'overall', 'limit': 50}, function (err, artists) {
+router.get('/:user/:period?', function (req, res) {
+  var period = req.params.period || 'overall';
+  lfm.user.getTopArtists({'user': req.params.user, 'period': period, 'limit': 50}, function (err, artists) {
     var promises = [];
     if (err) {
       return console.log('Falied: ' + err);

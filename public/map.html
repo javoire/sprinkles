@@ -12,6 +12,7 @@
   <script type="text/javascript" src="third-party/Detector.js"></script>
   <script type="text/javascript" src="third-party/three.min.js"></script>
   <script type="text/javascript" src="third-party/Tween.js"></script>
+  <script type="text/javascript" src="utils.js"></script>
   <script type="text/javascript" src="globe.js"></script>
   <script type="text/javascript">
     if (!Detector.webgl) {
@@ -22,53 +23,71 @@
           .translate([1024, 512])
           .scale(325);
 
+      function mapTexture(geojson, color, strokeColor) {
+        var texture, context, canvas;
+
+        canvas = d3.select("body").append("canvas")
+            .style("display", "none")
+            .attr("width", "2048px")
+            .attr("height", "1024px");
+
+        context = canvas.node().getContext("2d");
+
+        var path = d3.geo.path()
+            .projection(projection)
+            .context(context);
+
+        context.strokeStyle = strokeColor || "#333";
+        context.lineWidth = 1;
+        context.fillStyle = color || "#CDB380";
+
+        context.beginPath();
+
+        path(geojson);
+
+        if (color) {
+          context.fill();
+        }
+
+        context.stroke();
+
+        texture = new THREE.Texture(canvas.node());
+        texture.needsUpdate = true;
+
+        canvas.remove();
+
+        return texture;
+      }
+
+
       d3.json('data/world.json', function (err, data) {
 
         d3.select("#loading").transition().duration(500)
             .style("opacity", 0).remove();
 
-        function mapTexture(geojson, color, strokeColor) {
-          var texture, context, canvas;
-
-          canvas = d3.select("body").append("canvas")
-              .style("display", "none")
-              .attr("width", "2048px")
-              .attr("height", "1024px");
-
-          context = canvas.node().getContext("2d");
-
-          var path = d3.geo.path()
-              .projection(projection)
-              .context(context);
-
-          context.strokeStyle = strokeColor || "#333";
-          context.lineWidth = 1;
-          context.fillStyle = color || "#CDB380";
-
-          context.beginPath();
-
-          path(geojson);
-
-          if (color) {
-            context.fill();
-          }
-
-          context.stroke();
-
-          texture = new THREE.Texture(canvas.node());
-          texture.needsUpdate = true;
-
-          canvas.remove();
-
-          return texture;
-        }
-
         var countries = topojson.feature(data, data.objects.countries);
+
+        var geo = geodecoder(countries.features);
+
+        var country = geo.find('Sweden');
+
+        // get the geojson for some countries
+        var someCountries = ['Sweden', 'Norway', 'Denmark'];
+        var someCountriesGeojson = { features: [], type: "FeatureCollection" };
+        someCountries.forEach(function(country) {
+          var countrGeojson = geo.find(country);
+          if (countrGeojson) {
+            someCountriesGeojson.features.push(countrGeojson)
+          }
+        });
+
+        var overlayTexture = mapTexture(someCountriesGeojson, 'rgb(46, 189, 89)', 'black');
 
         // google stuff
         var container = document.getElementById('container');
         var globe = new DAT.Globe(container, {
-          myCoolTexture: mapTexture(countries, 'rgb(46, 189, 89)', 'black')
+          myCoolTexture: mapTexture(countries, '#222', 'black'),
+          overlayTexture: overlayTexture
         });
         console.log(globe);
 

@@ -104,21 +104,34 @@ DAT.Globe = function(container, opts) {
     shader = Shaders['earth'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
-//    uniforms['texture'].value = THREE.ImageUtils.loadTexture(imgDir+'world.jpg');
+    // base sphere
     uniforms['texture'].value = opts.myCoolTexture;
 
     material = new THREE.ShaderMaterial({
-
-          uniforms: uniforms,
-          vertexShader: shader.vertexShader,
-          fragmentShader: shader.fragmentShader
-
-        });
+      uniforms: uniforms,
+      vertexShader: shader.vertexShader,
+      fragmentShader: shader.fragmentShader
+    });
 
     mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = Math.PI;
     scene.add(mesh);
 
+    // overlay sphere
+    uniforms = THREE.UniformsUtils.clone(shader.uniforms);
+    uniforms['texture'].value = opts.overlayTexture;
+
+    overlayMaterial = new THREE.MeshBasicMaterial({
+      map: opts.overlayTexture,
+      transparent: true
+    });
+
+    overlayMesh = new THREE.Mesh(geometry, overlayMaterial);
+    overlayMesh.rotation.y = Math.PI;
+    overlayMesh.scale.set( 1.01, 1.01, 1.01 );
+    scene.add(overlayMesh);
+
+    // atmoSPHERE (lol)
     shader = Shaders['atmosphere'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 

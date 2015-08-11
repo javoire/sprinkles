@@ -4,6 +4,9 @@ var bodyParser = require('body-parser');
 var LastfmAPI = require('lastfmapi');
 var echojs    = require('echojs');
 
+// server our public shitz
+app.use(express.static('public'));
+
 var lfm = new LastfmAPI({
   'api_key' : process.env.LFM_KEY,
   'secret' : process.env.LFM_SECRET

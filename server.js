@@ -6,6 +6,7 @@ var echojs = require('echojs');
 var Q = require('q');
 var _ = require('lodash');
 var SpotifyWebApi = require('spotify-web-api-node');
+var apicache = require('apicache').options({debug: true}).middleware;
 
 // server our public shitz
 app.use(express.static('public'));
@@ -72,7 +73,7 @@ router.get('/users/:user/:period?', function (req, res) {
 
 router.get('/countries/:country/:limit?', function (req, res) {
   //FIXME: lastfmapi (the library) crashes if you send in a limit of only 1, always have at least two tracks in the query.
-  var limit = Math.min(Math.max(req.params.limit || 1, 1), 10)+1;
+  var limit = Math.min(Math.max(req.params.limit || 1, 1), 10) + 1;
   var promises = [];
   lfm.geo.getTopTracks({country: req.params.country, limit: limit}, function (err, toptracks) {
     if (err) {
@@ -113,7 +114,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/api', router);
+app.use('/api', apicache('30 minutes'), router);
 
 app.listen(port);
 console.log('Magic happens on port ' + port);

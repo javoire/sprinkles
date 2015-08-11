@@ -41,7 +41,6 @@ if (!Detector.webgl) {
 
       globe.animate();
 
-
       countriesTopList(res.metadata.countrypercent); // print countries toplist in DOM
 
       document.body.style.backgroundImage = 'none'; // remove loading

@@ -1,0 +1,24 @@
+{
+  "name": "sprinkles",
+  "version": "1.0.0",
+  "description": "Add song sprinles on map",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HackOutWest15/sprinkles.git"
+  },
+  "author": "Safeword LLC",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HackOutWest15/sprinkles/issues"
+  },
+  "homepage": "https://github.com/HackOutWest15/sprinkles#readme",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "express": "^4.13.3",
+    "lastfmapi": "0.0.6"
+  }
+}

@@ -19,6 +19,7 @@ gulp.task('scripts', function () {
       'client/globe.js',
       'client/countriesTopList.js',
       'client/utils.js',
+      'client/renderGlobe.js',
       'client/fetchData.js',
       'client/welcomeScreen.js',
       'client/app.js'

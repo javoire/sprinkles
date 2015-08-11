@@ -8,12 +8,21 @@ gulp.task('scripts', function () {
       'bower_components/d3/d3.js',
       'bower_components/three.js/three.js',
       'bower_components/topojson/topojson.js',
-      'bower_components/tweenjs/src/Tweenj.js'
+      'bower_components/tweenjs/src/Tweenj.js',
+      'bower_components/q/q.js'
     ])
     .pipe(concat('vendor.js'))
     .pipe(gulp.dest('./public/'));
 
-  gulp.src(['client/**/*.js'])
+  gulp.src([
+      'client/Detector.js',
+      'client/globe.js',
+      'client/countriesTopList.js',
+      'client/utils.js',
+      'client/fetchData.js',
+      'client/welcomeScreen.js',
+      'client/app.js'
+    ])
     .pipe(concat('all.js'))
     .pipe(gulp.dest('./public/'));
 });

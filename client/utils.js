@@ -68,13 +68,13 @@ function mapTexture(geojson, color, strokeColor) {
 
   // map hackery
   var projection = d3.geo.equirectangular()
-    .translate([1024, 512])
-    .scale(325);
+    .translate([2048, 1024])
+    .scale(650);
 
   canvas = d3.select("body").append("canvas")
     .style("display", "none")
-    .attr("width", "2048px")
-    .attr("height", "1024px");
+    .attr("width", "4096px")
+    .attr("height", "2048px");
 
   context = canvas.node().getContext("2d");
 

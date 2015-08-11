@@ -55,7 +55,8 @@ if (!Detector.webgl) {
           overlayTexture: overlayTexture
         });
         console.log(globe);
-
+        var titlebar = document.querySelector('#country-list h2');
+        titlebar.appendChild(document.createTextNode('These are your top countries, ' + nick));
         globe.animate();
 
         countriesTopList(res.metadata.countrypercent); // print countries toplist in DOM

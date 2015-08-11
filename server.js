@@ -70,25 +70,29 @@ router.get('/users/:user/:period?', function (req, res) {
 });
 
 
-router.get('/countries/:country', function (req, res) {
+router.get('/countries/:country/:limit?', function (req, res) {
+  //FIXME: lastfmapi (the library) crashes if you send in a limit of only 1, always have at least two tracks in the query.
+  var limit = Math.min(Math.max(req.params.limit || 1, 1), 10)+1;
   var promises = [];
-  lfm.geo.getMetros(req.params.country, function (err, metros) {
+  lfm.geo.getTopTracks({country: req.params.country, limit: limit}, function (err, toptracks) {
     if (err) {
-      return console.log('Metros failed: ' + err);
+      console.log(toptracks);
+      return console.log("Failed to fetch top tracks: " + err);
     }
-    console.log(metros);
-    console.log(_.first(metros['metro']));
-    metro = _.first(metros['metro'])
-    console.log(metro);
-    var deferred = Q.defer();
-    promises.push(deferred.promise);
-    lfm.geo.getMetroHypeTrackChart({country: metro.country, metro: metro.name, limit: 1}, function (err, toptracks) {
-      if (err) {
-        return console.log("Failed to fetch top tracks: " + err);
-      }
-      spotify.searchTracks('artist:\'' + toptracks.track.artist.name + '\' track:\'' + toptracks.track.name + '\'')
+    //FIXME: remove the last track, due to the hack above.
+    toptracks['track'].slice(0, -1).forEach(function (toptrack) {
+      console.log(toptrack);
+      var deferred = Q.defer();
+      promises.push(deferred.promise);
+      spotify.searchTracks('artist:\'' + toptrack.artist.name + '\' track:\'' + toptrack.name + '\'')
         .then(function (data) {
-          deferred.resolve({artist: toptracks.track.artist.name, track:  toptracks.track.name, preview_url: _.first(data.body.tracks.items).preview_url})
+          //console.log(data);
+          console.log(_.first(data.body.tracks.items).preview_url)
+          deferred.resolve({
+            artist: toptrack.artist.name,
+            track: toptrack.name,
+            preview_url: _.first(data.body.tracks.items).preview_url
+          })
         }, function (err) {
           console.error(err);
           deferred.resolve()
@@ -100,7 +104,7 @@ router.get('/countries/:country', function (req, res) {
       response['toptracks'] = toptracks;
       return res.json(response)
     });
-  })
+  });
 });
 
 app.use(function (req, res, next) {

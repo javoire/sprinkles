@@ -1,6 +1,7 @@
 function fetchData(event){
   event.preventDefault();
 
+  var nickInput = document.getElementById('nickInput');
   var start = document.getElementById('start');
   var apiUrl = '/api/users/';
   var nick = nickInput.value || 'eshuu';

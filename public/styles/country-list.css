@@ -1,0 +1,16 @@
+#country-list {
+    padding-left: 20px;
+    padding-top: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+
+#country-list ul {
+    padding: 0;
+}
+
+#country-list li {
+    list-style: none;
+}

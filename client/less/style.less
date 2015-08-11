@@ -21,8 +21,11 @@ a:hover {
   text-decoration: underline;
 }
 
+.center { margin: 0 auto; }
 
 #start {
+  display: flex;
+  align-items: center;
   box-sizing: border-box;
   height: 100vh;
   width: 100vw;
@@ -75,5 +78,6 @@ a:hover {
   }
 
   &:not(.remove) ~ #map { display: none; }
+
 }
 

@@ -7,7 +7,6 @@
     "d3": "~3.5.6",
     "three.js": "~0.71.0",
     "tweenjs": "*",
-    "topojson": "~1.6.19",
-    "sp-bootstrap": "git@ghe.spotify.net:www/sp-bootstrap.git#~5.2.0"
+    "topojson": "~1.6.19"
   }
 }

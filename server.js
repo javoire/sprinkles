@@ -27,7 +27,7 @@ var port = process.env.PORT || 8080;        // set our port
 
 var router = express.Router();
 
-router.get('/:user/:period?', function (req, res) {
+router.get('/users/:user/:period?', function (req, res) {
   var period = req.params.period || 'overall';
   lfm.user.getTopArtists({'user': req.params.user, 'period': period, 'limit': 50}, function (err, artists) {
     var promises = [];
@@ -66,6 +66,9 @@ router.get('/:user/:period?', function (req, res) {
     });
   });
 });
+
+
+router.get('/countries/:country', function (req, res) {});
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");

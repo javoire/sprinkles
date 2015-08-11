@@ -3,5 +3,8 @@ if (!Detector.webgl) {
 } else {
   // Start app
   // show welcome screen
-  welcomeScreen();
+  d3.json('data/world.json', function (err, data) {
+    renderGlobe(data);
+    welcomeScreen();
+  });
 }

@@ -1,0 +1,26 @@
+@import '../../bower_components/sp-bootstrap/source/_less/variables.less';
+
+body {
+  background-color: black;
+}
+
+#welcome {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1000;
+  background: rgba(0,0,0,0.7);
+
+  h1 {
+    margin-top: 160px;
+    text-align: center;
+    font-weight: 800;
+    font-size: 45px;
+
+    span {
+      color: @brand-primary;
+    }
+  }
+}

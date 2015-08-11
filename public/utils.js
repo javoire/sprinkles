@@ -62,3 +62,39 @@ function geodecoder(features) {
     }
   };
 }
+
+function mapTexture(geojson, color, strokeColor) {
+  var texture, context, canvas;
+
+  canvas = d3.select("body").append("canvas")
+    .style("display", "none")
+    .attr("width", "2048px")
+    .attr("height", "1024px");
+
+  context = canvas.node().getContext("2d");
+
+  var path = d3.geo.path()
+    .projection(projection)
+    .context(context);
+
+  context.strokeStyle = strokeColor || "#333";
+  context.lineWidth = 1;
+  context.fillStyle = color || "#CDB380";
+
+  context.beginPath();
+
+  path(geojson);
+
+  if (color) {
+    context.fill();
+  }
+
+  context.stroke();
+
+  texture = new THREE.Texture(canvas.node());
+  texture.needsUpdate = true;
+
+  canvas.remove();
+
+  return texture;
+}

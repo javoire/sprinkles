@@ -3,30 +3,25 @@
   <head>
     <title>WebGL Globe</title>
     <meta charset="utf-8">
+    <link href="https://sp-bootstrap.global.ssl.fastly.net/5.2.0/sp-bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="all.css">
-    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-    <style>
-      body {
-        font-family: 'Abel', sans-serif;
-      }
-    </style>
   </head>
   <body>
 
-  <div id="start">
-    <div class="center">
-    <h1>Sprinkle the world with your music</h1>
-    <form>
-      <input id="nickInput" type="text" placeholder="Your last.fm nick" autofocus>
-      <!-- <input type="range" 1w, 1mo, 3, 6, 12, overall> -->
-      <button id="getButton">SPRINKLE</button>
+  <div id="loader" class="hide"></div>
+
+  <div id="welcome">
+    <form id="form">
+      <h1>Sprinkle the world with <span>your</span> music.</h1>
+      <input id="nickInput" type="text" placeholder="last.fm username" autofocus>
     </form>
-    </div>
   </div>
 
   <div id="map">
     <div id="country-list">
-      <h2></h2>
+      <h2>Woah!</h2>
+      <hr/>
+      <h3>Your top 100 artists come<br/> from these countries:</h3>
       <ul></ul>
     </div>
   </div>

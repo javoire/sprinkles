@@ -1,51 +1,46 @@
 html {
-    height: 100%;
-    margin: 0;
+  height: 100%;
+  margin: 0;
 }
 body {
-    margin: 0;
-    padding: 0;
-    background: #000000 url(images/loading.gif) center center no-repeat;
-    color: #ffffff;
-    font-family: sans-serif;
-    font-size: 13px;
-    line-height: 20px;
-    height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #000000 url(images/loading.gif) center center no-repeat;
+  color: #ffffff;
+  font-family: sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  height: 100%;
 }
 
 a {
-    color: #aaa;
-    text-decoration: none;
+  color: #aaa;
+  text-decoration: none;
 }
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 
 #start {
-    box-sizing: border-box;
-    height: 100vh;
-    width: 100vw;
+  box-sizing: border-box;
+  height: 100vh;
+  width: 100vw;
 
-    padding: 30px;
-    background-color: rgba(46, 189, 89, 1);
+  padding: 30px;
+  background-color: rgba(46, 189, 89, 1);
 
-    opacity: 1;
-    transform: translate3d(0, 0, );
-    transition: all 400ms ease-out;
-    will-change: opacity, transform;
+  opacity: 1;
+  transition: opacity 400ms ease-out;
+  will-change: opacity;
 
-}
-
-#start h1 {
+  h1, form {
     text-align: center;
-}
+    transition: transform 400ms ease-out;
+    will-change: transition;
+  }
 
-#start form {
-    text-align: center;
-}
-
-#start input {
+  input {
     margin: 0 auto;
     padding: 13px 32px;
     font-size: 2em;
@@ -54,9 +49,9 @@ a:hover {
     outline: 0;
     width: 200px;
     background: #FFFFFF;
-}
+  }
 
-#start button {
+  button {
     text-align: center;
     border: 0;
     border-radius: 50%;
@@ -66,15 +61,19 @@ a:hover {
     background: white;
     color: rgba(46, 189, 89, 1);
     font-weight: bold;
-}
+  }
 
-#start.fade {
+  &.fade {
     opacity: 0;
-    transform: translateY(30px);
-}
+    h1, form {
+      transform: translateY(30px);
+    }
+  }
 
-#start.remove {
+  &.remove {
     display: none;
+  }
+
+  &:not(.remove) ~ #map { display: none; }
 }
 
-#start:not(.remove) ~ #map { display: none; }

@@ -38,6 +38,7 @@ gulp.task('styles', function () {
     .pipe(livereload());
 });
 
+
 gulp.task('watch', function() {
   livereload.listen();
   gulp.watch('client/less/**/*.less', ['styles']);
@@ -46,3 +47,4 @@ gulp.task('watch', function() {
 
 gulp.task('default', ['scripts', 'styles', 'watch']);
 gulp.task('build', ['scripts', 'styles', ]);
+gulp.task('heroku:production', ['scripts', 'styles', ]);

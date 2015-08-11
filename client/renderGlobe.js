@@ -6,7 +6,6 @@ function renderUserDataOnGlobe(userCountryData, worldData) {
 
   var geo = geodecoder(countries.features);
 
-
   var baseRed = 46;
   var baseGreen = 189;
   var baseBlue = 89;
@@ -32,9 +31,10 @@ function renderUserDataOnGlobe(userCountryData, worldData) {
     overlayTextures: textures
   });
   console.log(globe);
-  var titlebar = document.querySelector('#country-list h2');
-  titlebar.appendChild(document.createTextNode('These are your top countries, ' + nick));
+
   globe.animate();
+
+  countriesTopList(userCountryData);
 
   document.body.style.backgroundImage = 'none'; // remove loading
 }

@@ -2,6 +2,7 @@ var gulp          = require('gulp');
 var less          = require('gulp-less');
 var concat        = require('gulp-concat');
 var autoprefixer  = require('gulp-autoprefixer');
+var livereload    = require('gulp-livereload');
 
 gulp.task('scripts', function () {
   gulp.src([
@@ -33,10 +34,12 @@ gulp.task('styles', function () {
     .pipe(less())
     .pipe(concat('all.css'))
     .pipe(autoprefixer())
-    .pipe(gulp.dest('./public/'));
+    .pipe(gulp.dest('./public/'))
+    .pipe(livereload());
 });
 
 gulp.task('watch', function() {
+  livereload.listen();
   gulp.watch('client/less/**/*.less', ['styles']);
   gulp.watch('client/**/*.js', ['scripts']);
 });

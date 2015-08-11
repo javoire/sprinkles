@@ -70,7 +70,7 @@ DAT.Globe = function (container, opts) {
 
   var camera, scene, renderer, w, h;
   var mesh, atmosphere, point;
-
+  var overlayGroup;
 
   // animation flags
   var isSpinning = false;
@@ -168,6 +168,8 @@ DAT.Globe = function (container, opts) {
     container.addEventListener('mouseout', function () {
       overRenderer = false;
     }, false);
+    overlayGroup = new THREE.Group();
+    scene.add(overlayGroup);
   }
 
   function addData(data, opts) {
@@ -445,7 +447,9 @@ DAT.Globe = function (container, opts) {
       var overlayMesh = new THREE.Mesh(geometry, overlayMaterial);
       overlayMesh.rotation.y = Math.PI;
       overlayMesh.scale.set(1.001, 1.001, 1.001);
-      scene.add(overlayMesh);
+      scene.remove(overlayGroup.name);
+      overlayGroup.add(overlayMesh);
+      scene.add(overlayGroup);
     })
 
 

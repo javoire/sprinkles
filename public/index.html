@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Sprinkles</title>
+  <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+  <style>
+    html {
+      font-family: 'Abel', sans-serif;
+    }
+  </style>
   <!-- <link rel="stylesheet" href="style.css"> -->
 
 </head>
@@ -22,7 +28,7 @@
   </div>
 
   <script>
-  var apiUrl = 'http://localhost:8880/api/';
+  var apiUrl = '/api/';
   var artistsHolder = document.getElementById('artists');
   var nickInput = document.getElementById('nickInput');
   var getButton = document.getElementById('getButton');
@@ -33,19 +39,19 @@
 
     artists.forEach(function(artist){
       var li = document.createElement('li');
-      li.innerHTML = artist.name + ' - ' + artist.playcount;
+      li.innerHTML = artist.artist + ' - ' + artist.country;
       artistsHolder.appendChild(li);
     })
   };
 
   var fetchData = function(event){
     event.preventDefault();
+    var nick = nickInput.value || 'eshuu';
 
-    fetch(apiUrl + nickInput.value).then(function(a){
+    fetch(apiUrl + nick).then(function(a){
       return a.json();
     }).then(function(b){
-      console.log(b);
-      plotIt(b.artist);
+      plotIt(b);
     });
   };
 

@@ -22,7 +22,7 @@ var echo = echojs({
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8880;        // set our port
+var port = process.env.PORT || 8080;        // set our port
 
 var router = express.Router();
 
@@ -40,14 +40,13 @@ router.get('/:user/:period?', function (req, res) {
       promises.push(d.promise);
       echo('artist/profile').get({'name': name, 'bucket': 'artist_location'},
         function (err, json) {
-          var timer = setTimeout(d.resolve, 1000);
-          if (err) {
+          var timer = setTimeout(d.resolve, 2000);
+          if (err || !json.response.artist || !json.response.artist.artist_location || !json.response.artist.artist_location.country) {
             console.log('Echo failed for artist: ' + name);
-            console.log(json);
             clearTimeout(timer);
             d.resolve();
           }
-          else if (json.response['artist']['artist_location'] && json.response['artist']['artist_location']['country']) {
+          else {
             console.log(name + ' -> ' + json.response['artist']['artist_location']['country']);
             clearTimeout(timer);
             d.resolve({artist: name, country: json.response['artist']['artist_location']['country']});

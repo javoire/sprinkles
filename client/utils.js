@@ -372,6 +372,8 @@ for (var key in ISO3166.codeToCountry) {
   ISO3166.countryToCode[ISO3166.codeToCountry[key]] = key;
 }
 
+ISO3166.countryToCode["SOUTH KOREA"] = "KR";
+
 var latLonData;
 d3.json('data/country_lat_lon.json', function (error, latlon) {
   if (error) return console.warn(error);

@@ -21,7 +21,6 @@ function renderUserDataOnGlobe(userCountryData) {
   });
 
   globe.updateOverlays(textures);
-
   countriesTopList(userCountryData);
 
   document.body.style.backgroundImage = 'none'; // remove loading

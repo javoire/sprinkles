@@ -356,7 +356,7 @@ DAT.Globe = function (container, opts) {
   }
 
   function spin() {
-    rotation.y += 10;
+    target.x -= 0.005;
   }
 
   function render() {
@@ -374,15 +374,10 @@ DAT.Globe = function (container, opts) {
 
       camera.lookAt(mesh.position);
 
-      // have we reached target rotation?
-//      if(??) {
-//        hasEntered = true;
-//      }
     }
-
-//    if (isSpinning) {
-//      spin();
-//    }
+    if (isSpinning) {
+      spin();
+    }
 
     isSpinning = true;
     renderer.render(scene, camera);
@@ -431,7 +426,6 @@ DAT.Globe = function (container, opts) {
   function updateOverlays(overlayTextures) {
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
-    var overlayMaterials = [];
     shader = Shaders['earth'];
     overlayTextures.forEach(function (overlayTexture) {
       overlayMaterial = new THREE.MeshBasicMaterial({

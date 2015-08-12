@@ -76,6 +76,7 @@ DAT.Globe = function (container, opts) {
   var isSpinning = true;
   var hasEntered = false;
 
+  var highLightedCountry;
   var overRenderer;
 
   var curZoomSpeed = 0;
@@ -414,6 +415,35 @@ DAT.Globe = function (container, opts) {
     this._time = t;
   });
 
+  function highLightCountry(country) {
+    isSpinning = false;
+    var countryGeojson = geo.find(country.country);
+    var highlightTexture;
+    if (countryGeojson) {
+      var rgb = "rgba(255, 255, 255, 0.7)";
+      console.log(rgb);
+      highlightTexture = mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb , 'black');
+    }
+
+    var geometry = new THREE.SphereGeometry(200, 40, 30);
+    shader = Shaders['earth'];
+
+    if (highLightedCountry) {
+      scene.remove(highLightedCountry);
+    }
+      var highLightedCountryMaterial = new THREE.MeshBasicMaterial({
+        map: highlightTexture,
+        transparent: true,
+        needsUpdate: true
+      });
+
+      highLightedCountry = new THREE.Mesh(geometry, highLightedCountryMaterial);
+      highLightedCountry.rotation.y = Math.PI;
+      highLightedCountry.scale.set(1.001, 1.001, 1.001);
+      scene.add(highLightedCountry);
+  }
+
+  this.highLightCountry = highLightCountry;
   this.addData = addData;
   this.createPoints = createPoints;
   this.renderer = renderer;

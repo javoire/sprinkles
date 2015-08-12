@@ -35,10 +35,12 @@ router.get('/users/:user/:period?', function (req, res) {
   lfm.user.getTopArtists({user: req.params.user, period: period, limit: 100}, function (err, artists) {
     var promises = [];
     if (err) {
-      return console.log('Falied: ' + err);
+      return console.log('getTopArtists failed',  err);
     }
-    artists['artist'].forEach(function (artist) {
+    var rank = {};
+    artists['artist'].forEach(function (artist, index) {
       var name = artist.name;
+      rank[name] = index;
       console.log("Querying: " + name);
       var deferred = Q.defer();
       promises.push(deferred.promise);
@@ -46,14 +48,18 @@ router.get('/users/:user/:period?', function (req, res) {
         function (err, json) {
           var timer = setTimeout(deferred.resolve, 2000);
           if (err || !json.response.artist || !json.response.artist.artist_location || !json.response.artist.artist_location.country) {
-            console.log('Echo failed for artist: ' + name);
+            console.log('Echo failed for artist: ' + name, err);
             clearTimeout(timer);
             deferred.resolve();
           }
           else {
             console.log(name + ' -> ' + json.response['artist']['artist_location']['country']);
             clearTimeout(timer);
-            deferred.resolve({artist: name, country: json.response['artist']['artist_location']['country']});
+            deferred.resolve({
+              artist: name,
+              country: json.response['artist']['artist_location']['country'],
+              rank: rank[name]
+            });
           }
         }
       )
@@ -63,7 +69,14 @@ router.get('/users/:user/:period?', function (req, res) {
       artists = _.compact(artists);
       response['artists'] = artists;
       response['metadata']['countrypercent'] = _.map(_.countBy(artists, "country"), function (value, key) {
-        return {country: key, plays: value, percent: value / artists.length}
+        return {
+          country: key,
+          plays: value,
+          percent: value / artists.length,
+          artists: (function() {
+            return _.filter(artists, { country: key })
+          })()
+        }
       });
       return res.json(response)
     });
@@ -87,7 +100,6 @@ router.get('/countries/:country/:limit?', function (req, res) {
       promises.push(deferred.promise);
       spotify.searchTracks('artist:\'' + toptrack.artist.name + '\' track:\'' + toptrack.name + '\'')
         .then(function (data) {
-          //console.log(data);
           console.log(_.first(data.body.tracks.items).preview_url)
           deferred.resolve({
             artist: toptrack.artist.name,

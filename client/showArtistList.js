@@ -1,16 +1,16 @@
-function showArtistList() {
+function showArtistList(country) {
   var artistListWrapper = document.getElementById('artist-list');
+  artistListWrapper.className = ''; // hide
+
   var artistListHeader = document.querySelector('#artist-list h2');
   var artistList = document.querySelector('#artist-list ul');
   artistList.innerHTML = '';
-  countries.forEach(function(country){
+
+  artistListHeader.innerHTML = country.country;
+
+  country.artists.forEach(function(artist){
     var li = document.createElement('li');
-    li.innerHTML = country.country + ' ' + Math.round(country.percent * 100) + '%';
-
-    li.addEventListener('click', function() {
-      console.log('asdsadas');
-    })
-
+    li.innerHTML = artist.artist;
     artistList.appendChild(li);
   });
 

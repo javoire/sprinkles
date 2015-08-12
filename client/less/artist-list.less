@@ -4,7 +4,7 @@
   text-align: right;
   position: fixed;
   top: 70px;
-  right: 110px;
+  right: 70px;
   z-index: 100;
   opacity: 0;
   transition: opacity .3s ease-out;
@@ -17,13 +17,15 @@
   ul {
     padding: 0;
     font-weight: 400;
+    column-count: 2;
+    column-gap: 40px;
   }
 
   li {
     list-style: none;
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
-    line-height: 30px;
+    line-height: 22px;
 
     &:hover {
       color: @brand-primary;

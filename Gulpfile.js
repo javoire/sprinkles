@@ -19,6 +19,7 @@ gulp.task('scripts', function () {
   gulp.src([
       'client/Detector.js',
       'client/globe.js',
+      'client/playArtist.js',
       'client/showArtistList.js',
       'client/countriesTopList.js',
       'client/utils.js',

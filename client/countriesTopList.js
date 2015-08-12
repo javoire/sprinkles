@@ -13,7 +13,7 @@ function countriesTopList(countries) {
 
     li.addEventListener('click', function() {
       if(activeItem) activeItem.classList.remove('active');
-
+      panToCountry(country);
       activeItem = li;
       li.classList.add('active');
       showArtistList(country);

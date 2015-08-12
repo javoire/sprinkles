@@ -7,7 +7,7 @@ We need beeeeeez.
 **Server**
 ```bash
 npm install -g nodemon
-npm script start-dev
+npm run-script start-dev
 ```
 
 **Client**

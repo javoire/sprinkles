@@ -6,6 +6,7 @@ var livereload    = require('gulp-livereload');
 
 gulp.task('scripts', function () {
   gulp.src([
+      'node_modules/whatwg-fetch/fetch.js',
       'bower_components/d3/d3.js',
       'bower_components/threex.windowresize/threex.windowresize.js',
       'bower_components/three.js/three.js',

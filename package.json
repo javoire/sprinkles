@@ -33,6 +33,7 @@
     "lastfmapi": "0.0.6",
     "lodash": "^3.10.1",
     "q": "^1.4.1",
-    "spotify-web-api-node": "^2.1.0"
+    "spotify-web-api-node": "^2.1.0",
+    "whatwg-fetch": "^0.9.0"
   }
 }

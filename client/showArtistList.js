@@ -22,7 +22,10 @@ function showArtistList(country) {
 
   country.artists.forEach(function(artist){
     var li = document.createElement('li');
+    var icon = document.createElement('div');
+    icon.className = 'icon',
     li.innerHTML = artist.artist;
+    li.appendChild(icon);
     artistList.appendChild(li);
     artistNodes[artist.artist] = li;
 

@@ -33,6 +33,7 @@
     font-size: 16px;
     font-weight: 700;
     line-height: 22px;
+    padding-left: 35px;
 
     &:hover {
       color: @brand-primary;
@@ -43,6 +44,18 @@
       color: @brand-primary;
       font-size: 30px;
       line-height: 40px;
+      position: relative;
+
+      .icon {
+        background: url('images/feed.svg') center bottom;
+        background-size: cover;
+        width: 30px;
+        height: 30px;
+        display: block;
+        position: absolute;
+        left: 0;
+        bottom: 6px;
+      }
     }
   }
 

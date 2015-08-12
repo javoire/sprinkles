@@ -384,31 +384,24 @@ console.log(latLonData);
 var previouslySelectedCountry;
 function panToCountry(selectedCountry) {
   if (previouslySelectedCountry !== selectedCountry) {
-    console.log(ISO3166.countryToCode[selectedCountry.id.toUpperCase()]);
-    selectedCountry = latLonData.countries[ISO3166.countryToCode[selectedCountry.id.toUpperCase()]];
-    if (selectedCountry) {
-      console.log(selectedCountry);
-      globe.target.x = selectedCountry.lat * Math.PI / 180;
-      var targetY0 = -(selectedCountry.lon - 9) * Math.PI / 180;
-      globe.target.y = wrap(targetY0, -Math.PI, Math.PI);
-/*
-      var piCounter = 0;
-      while (true) {
-        var targetY0Neg = targetY0 - Math.PI * 2 * piCounter;
-        var targetY0Pos = targetY0 + Math.PI * 2 * piCounter;
-        console.log("Neg:" + targetY0Neg);
-        console.log("Pos:" + targetY0Pos);
-        console.log(globe.target.y);
-        if (Math.abs(targetY0Neg - globe.target.y) < Math.PI) {
-          globe.target.y = targetY0Neg;
-          break;
-        } else if (Math.abs(targetY0Pos - globe.target.y) < Math.PI) {
-          globe.target.y = targetY0Pos;
-          break;
-        }
-        piCounter++;
-        globe.target.y = wrap(targetY0, -Math.PI, Math.PI);
-      }*/
+    console.log(ISO3166.countryToCode[selectedCountry.country.toUpperCase()]);
+    countryLatLon = latLonData.countries[ISO3166.countryToCode[selectedCountry.country.toUpperCase()]];
+    if (countryLatLon) {
+      console.log(countryLatLon);
+      globe.highLightCountry(selectedCountry);
+      globe.target.y = (countryLatLon.lat * Math.PI / 180);
+      var targetX0 = wrap((countryLatLon.lon * Math.PI / 180) + (Math.PI / -2 ), -Math.PI, Math.PI);
+      var targetX0Neg = targetX0 - Math.PI * 2;
+      var targetX0Pos =  targetX0 + Math.PI * 2;
+      console.log("Neg:" + targetX0Neg);
+      console.log("Pos:" + targetX0Pos);
+      console.log(globe.target.y);
+      if (Math.abs(targetX0Neg - globe.target.x) < Math.PI) {
+        targetX0= targetX0Neg;
+      } else if (Math.abs(targetX0Pos - globe.target.x) < Math.PI) {
+        targetX0 = targetX0Pos;
+      }
+      globe.target.x = wrap(targetX0, -Math.PI, Math.PI);
     }
     previouslySelectedCountry = selectedCountry
   }

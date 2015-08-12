@@ -1,12 +1,18 @@
 function showArtistList(country) {
   var artistListWrapper = document.getElementById('artist-list');
+  var artistList = document.querySelector('#artist-list ul');
+
   artistListWrapper.className = ''; // hide
+  artistList.className = ''; // reset columns
 
   var artistListHeader = document.querySelector('#artist-list h2');
-  var artistList = document.querySelector('#artist-list ul');
   artistList.innerHTML = '';
 
   artistListHeader.innerHTML = country.country;
+
+  if (country.artists.length > 10) {
+    artistList.className = 'columns';
+  };
 
   country.artists.forEach(function(artist){
     var li = document.createElement('li');

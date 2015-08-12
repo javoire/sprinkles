@@ -22,10 +22,19 @@
     list-style: none;
     font-size: 14px;
     line-height: 22px;
+    transition: all 100ms;
 
     &:hover {
-      color: @brand-primary;
+      color: lighten(@brand-primary,10);
       cursor: pointer;
+      transition: all 200ms;
+    }
+
+    &.active {
+      color: @brand-primary;
+      font-size: 1.8em;
+      line-height: 1.8em;
+      font-weight: 800;
     }
   }
 

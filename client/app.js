@@ -9,3 +9,5 @@ if (!Detector.webgl) {
     welcomeScreen();
   });
 }
+
+var audioPlayer = new Audio();

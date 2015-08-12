@@ -7,6 +7,7 @@ var Q = require('q');
 var _ = require('lodash');
 var SpotifyWebApi = require('spotify-web-api-node');
 var apicache = require('apicache').options({debug: true}).middleware;
+var countrynames = require('countrynames');
 
 // server our public shitz
 app.use(express.static('public'));
@@ -118,6 +119,36 @@ router.get('/countries/:country/:limit?', function (req, res) {
       return res.json(response)
     });
   });
+});
+
+router.get('/toptracks/:artist/:countryName', function (req, res){
+  var artist = req.params.artist;
+  var countryCode = countrynames.getCode(req.params.countryName);
+  console.log(countryCode);
+  // get the artist id
+  spotify.searchArtists(artist)
+    .then(function (data) {
+
+      spotify.getArtistTopTracks(data.body.artists.items[0].id, countryCode)
+        .then(function (data) {
+          console.log(data);
+          return res.json(data);
+
+      // get top tracks for this artist
+      
+      // console.log(_.first(data.body.tracks.items).preview_url)
+      //     deferred.resolve({
+      //       artist: toptrack.artist.name,
+      //       track: toptrack.name,
+      //       preview_url: _.first(data.body.tracks.items).preview_url
+      //     })
+        }, function (err) {
+          console.error(err);
+        });
+    }, function (err) {
+      console.error(err);
+    });
+
 });
 
 app.use(function (req, res, next) {

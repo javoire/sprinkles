@@ -18,6 +18,7 @@ function countriesTopList(countries) {
       li.classList.add('active');
       showArtistList(country);
       panToCountry(geo.find(country.country));
+      playArtistList(country.artists, country.country);
     });
 
     countryList.appendChild(li);

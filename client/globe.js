@@ -158,9 +158,7 @@ DAT.Globe = function (container, opts) {
     container.addEventListener('mousewheel', onMouseWheel, false);
 
     document.addEventListener('keydown', onDocumentKeyDown, false);
-
-    window.addEventListener('resize', onWindowResize, false);
-
+    
     container.addEventListener('mouseover', function () {
       overRenderer = true;
     }, false);
@@ -344,11 +342,7 @@ DAT.Globe = function (container, opts) {
     }
   }
 
-  function onWindowResize(event) {
-    camera.aspect = container.offsetWidth / container.offsetHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
-  }
+  var winResize   = new THREEx.WindowResize(renderer, camera)
 
   function zoom(delta) {
     distanceTarget -= delta;

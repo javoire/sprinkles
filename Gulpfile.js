@@ -7,6 +7,7 @@ var livereload    = require('gulp-livereload');
 gulp.task('scripts', function () {
   gulp.src([
       'bower_components/d3/d3.js',
+      'bower_components/threex.windowresize/threex.windowresize.js',
       'bower_components/three.js/three.js',
       'bower_components/topojson/topojson.js',
       'bower_components/tweenjs/src/Tweenj.js',

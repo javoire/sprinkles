@@ -1,3 +1,4 @@
+var geo;
 function fetchData(event){
   event.preventDefault();
 
@@ -21,7 +22,10 @@ function fetchData(event){
     fetch(apiUrl + nick).then(function(a){
       return a.json();
     }).then(function(res){
-      renderUserDataOnGlobe(res.metadata.countrypercent, worldData);
+      var countries = topojson.feature(worldData, worldData.objects.countries);
+
+      geo = geodecoder(countries.features);
+      renderUserDataOnGlobe(res.metadata.countrypercent);
 
       // fade out loader
       loader.className = 'hide';

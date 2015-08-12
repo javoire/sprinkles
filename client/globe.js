@@ -158,7 +158,7 @@ DAT.Globe = function (container, opts) {
     container.addEventListener('mousewheel', onMouseWheel, false);
 
     document.addEventListener('keydown', onDocumentKeyDown, false);
-    
+
     container.addEventListener('mouseover', function () {
       overRenderer = true;
     }, false);
@@ -425,7 +425,8 @@ DAT.Globe = function (container, opts) {
   this.createPoints = createPoints;
   this.renderer = renderer;
   this.scene = scene;
-  this.updateOverlays = updateOverlays
+  this.updateOverlays = updateOverlays;
+  this.target = target;
 
   function updateOverlays(overlayTextures) {
 

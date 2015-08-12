@@ -1,10 +1,6 @@
-function renderUserDataOnGlobe(userCountryData, worldData) {
+function renderUserDataOnGlobe(userCountryData) {
   var nickInput = document.getElementById('nickInput');
   var nick = nickInput.value || 'eshuu';
-
-  var countries = topojson.feature(worldData, worldData.objects.countries);
-
-  var geo = geodecoder(countries.features);
 
   var baseRed = 46;
   var baseGreen = 189;

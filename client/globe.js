@@ -73,7 +73,7 @@ DAT.Globe = function (container, opts) {
   var overlayGroup;
 
   // animation flags
-  var isSpinning = false;
+  var isSpinning = true;
   var hasEntered = false;
 
   var overRenderer;
@@ -379,13 +379,11 @@ DAT.Globe = function (container, opts) {
       spin();
     }
 
-    isSpinning = true;
     renderer.render(scene, camera);
   }
 
   init();
   this.animate = animate;
-  this.isSpinning = isSpinning;
 
 
   this.__defineGetter__('time', function () {

@@ -122,7 +122,7 @@ DAT.Globe = function (container, opts) {
     mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = Math.PI;
     scene.add(mesh);
-    
+
     // atmoSPHERE (lol)
     shader = Shaders['atmosphere'];
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
@@ -149,6 +149,9 @@ DAT.Globe = function (container, opts) {
 
     renderer = new THREE.WebGLRenderer({antialias: true});
     renderer.setSize(w, h);
+
+    var winResize = new THREEx.WindowResize(renderer, camera);
+
 
     renderer.domElement.style.position = 'absolute';
 
@@ -343,8 +346,6 @@ DAT.Globe = function (container, opts) {
     }
   }
 
-  var winResize   = new THREEx.WindowResize(renderer, camera)
-
   function zoom(delta) {
     distanceTarget -= delta;
     distanceTarget = distanceTarget > 1000 ? 1000 : distanceTarget;
@@ -422,7 +423,7 @@ DAT.Globe = function (container, opts) {
     if (countryGeojson) {
       var rgb = "rgba(255, 255, 255, 0.7)";
       console.log(rgb);
-      highlightTexture = mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb , 'black');
+      highlightTexture = mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black');
     }
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);

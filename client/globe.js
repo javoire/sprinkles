@@ -418,13 +418,12 @@ DAT.Globe = function (container, opts) {
 
   function highLightCountry(country) {
     isSpinning = false;
+    // TODO: Even if we can't find a geojson for the country, it will still be panned too. This should probably be fixed.
     var countryGeojson = geo.find(country.country);
-    var highlightTexture;
-    if (countryGeojson) {
-      var rgb = "rgba(255, 255, 255, 0.7)";
-      console.log(rgb);
-      highlightTexture = mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black');
-    }
+    if (!countryGeojson) return;
+
+    var rgb = "rgba(255, 255, 255, 0.7)";
+    var highlightTexture = mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black');
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
     shader = Shaders['earth'];
@@ -432,16 +431,16 @@ DAT.Globe = function (container, opts) {
     if (highLightedCountry) {
       scene.remove(highLightedCountry);
     }
-      var highLightedCountryMaterial = new THREE.MeshBasicMaterial({
-        map: highlightTexture,
-        transparent: true,
-        needsUpdate: true
-      });
+    var highLightedCountryMaterial = new THREE.MeshBasicMaterial({
+      map: highlightTexture,
+      transparent: true,
+      needsUpdate: true
+    });
 
-      highLightedCountry = new THREE.Mesh(geometry, highLightedCountryMaterial);
-      highLightedCountry.rotation.y = Math.PI;
-      highLightedCountry.scale.set(1.001, 1.001, 1.001);
-      scene.add(highLightedCountry);
+    highLightedCountry = new THREE.Mesh(geometry, highLightedCountryMaterial);
+    highLightedCountry.rotation.y = Math.PI;
+    highLightedCountry.scale.set(1.001, 1.001, 1.001);
+    scene.add(highLightedCountry);
   }
 
   this.highLightCountry = highLightCountry;
@@ -469,7 +468,6 @@ DAT.Globe = function (container, opts) {
       overlayGroup.add(overlayMesh);
       scene.add(overlayGroup);
     })
-
 
 
   }

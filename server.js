@@ -166,6 +166,18 @@ if (cluster.isMaster) {
 
   });
 
+  router.get('/availablemarkets', function (req, res) {
+    spotify.getArtistTopTracks('43ZHCT0cAZBISjO8DG9PnE', "SE")
+      .then(function (data) {
+        return res.json(_.first(data.body.tracks).available_markets);
+      }, function (err) {
+        console.error(err);
+      });
+  }, function (err) {
+    console.error(err);
+  });
+
+
   app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");

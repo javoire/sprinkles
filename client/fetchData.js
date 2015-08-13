@@ -36,3 +36,24 @@ function fetchData(event){
     });
   });
 };
+
+function fetchWorldData(){
+
+  var loader = document.getElementById('loader');
+  loader.className = 'show';
+
+  d3.json('data/world.json', function (err, worldData) {
+
+
+    fetch('/api/availablemarkets').then(function(a){
+      return a.json();
+    }).then(function(res){
+      var countries = topojson.feature(worldData, worldData.objects.countries);
+
+      geo = geodecoder(countries.features);
+      renderSpotifyDataOnGlobe(res);
+      loader.className = 'hide';
+
+    });
+  });
+};

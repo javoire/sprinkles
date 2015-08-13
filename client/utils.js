@@ -21,12 +21,12 @@ function geodecoder(features) {
   var store = {};
 
   for (var i = 0; i < features.length; i++) {
-    store[features[i].id] = features[i];
+    store[features[i].id.toLowerCase()] = features[i];
   }
 
   return {
     find: function (id) {
-      return store[id];
+      return store[id.toLowerCase()];
     },
     search: function (lat, lng) {
 
@@ -380,14 +380,12 @@ d3.json('data/country_lat_lon.json', function (error, latlon) {
   latLonData = latlon;
 });
 
-console.log(latLonData);
 var previouslySelectedCountry;
+//TODO: this should probably be moved to globe.
 function panToCountry(selectedCountry) {
   if (previouslySelectedCountry !== selectedCountry) {
-    console.log(ISO3166.countryToCode[selectedCountry.country.toUpperCase()]);
     countryLatLon = latLonData.countries[ISO3166.countryToCode[selectedCountry.country.toUpperCase()]];
     if (countryLatLon) {
-      console.log(countryLatLon);
       globe.highLightCountry(selectedCountry);
       globe.target.y = (countryLatLon.lat * Math.PI / 180);
       var targetX0 = wrap((countryLatLon.lon * Math.PI / 180) + (Math.PI / -2 ), -Math.PI, Math.PI);

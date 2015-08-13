@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <title>Sprinkles</title>
+  <meta charset="utf-8">
+  <link href="https://sp-bootstrap.global.ssl.fastly.net/5.2.0/sp-bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="all.css">
+</head>
+<body>
+
+<div id="loader" class="hide"></div>
+
+<div class="icon-list">
+  <a target="_blank" href="http://last.fm/api"><div class="partner-icon lastfm"></div></a>
+  <a target="_blank" href="http://developer.echonest.com"><div class="partner-icon echonest"></div></a>
+  <a target="_blank" href="http://developer.spotify.com"><div class="partner-icon spotify"></div></a>
+</div>
+
+<div id="map">
+  <div id="artist-list">
+    <h2>Sweden</h2>
+    <ul></ul>
+  </div>
+
+  <div id="audio-player">
+    <button class="toggle"></button>
+  </div>
+</div>
+
+<script type="text/javascript" src="vendor.js"></script>
+<script type="text/javascript" src="all.js"></script>
+<script type="text/javascript">
+
+fetchWorldData();
+</script>
+</body>
+</body>
+</html>

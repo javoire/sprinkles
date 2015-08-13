@@ -432,16 +432,17 @@ DAT.Globe = function (container, opts) {
     if (highLightedCountry) {
       scene.remove(highLightedCountry);
     }
-      var highLightedCountryMaterial = new THREE.MeshBasicMaterial({
-        map: highlightTexture,
-        transparent: true,
-        needsUpdate: true
-      });
+    var highLightedCountryMaterial = new THREE.MeshBasicMaterial({
+      map: highlightTexture,
+      transparent: true,
+      needsUpdate: true
+    });
 
-      highLightedCountry = new THREE.Mesh(geometry, highLightedCountryMaterial);
-      highLightedCountry.rotation.y = Math.PI;
-      highLightedCountry.scale.set(1.001, 1.001, 1.001);
-      scene.add(highLightedCountry);
+    highLightedCountry = new THREE.Mesh(geometry, highLightedCountryMaterial);
+    highLightedCountry.rotation.y = Math.PI;
+    highLightedCountry.scale.set(1.001, 1.001, 1.001);
+    geometry.mergeMesh(highLightedCountry);
+    scene.add(highLightedCountry);
   }
 
   this.highLightCountry = highLightCountry;
@@ -465,16 +466,16 @@ DAT.Globe = function (container, opts) {
       var overlayMesh = new THREE.Mesh(geometry, overlayMaterial);
       overlayMesh.rotation.y = Math.PI;
       overlayMesh.scale.set(1.001, 1.001, 1.001);
+      geometry.mergeMesh(overlayMesh);
       scene.remove(overlayGroup.name);
       overlayGroup.add(overlayMesh);
       scene.add(overlayGroup);
     })
 
 
-
   }
 
   return this;
 
-}
+};
 

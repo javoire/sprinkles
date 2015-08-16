@@ -24,7 +24,7 @@ if (cluster.isMaster) {
 
   var app = express();
 
-// server our public shitz
+  // server our public shitz
   app.use(express.static('public'));
 
   var lfm = new LastfmAPI({
@@ -37,8 +37,8 @@ if (cluster.isMaster) {
   });
 
   var spotify = new SpotifyWebApi();
-// configure app to use bodyParser()
-// this will let us get the data from a POST
+  // configure app to use bodyParser()
+  // this will let us get the data from a POST
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(bodyParser.json());
 
@@ -89,9 +89,7 @@ if (cluster.isMaster) {
             country: key,
             plays: value,
             percent: value / artists.length,
-            artists: (function () {
-              return _.filter(artists, {country: key})
-            })()
+            artists: _.filter(artists, {country: key})
           }
         });
         return res.json(response)

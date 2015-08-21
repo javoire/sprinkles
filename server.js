@@ -6,184 +6,185 @@ var Q = require('q');
 var _ = require('lodash');
 var SpotifyWebApi = require('spotify-web-api-node');
 var apicache = require('apicache').options({debug: true}).middleware;
+var cache = new (require("node-cache"))({stdTTL: 0, checkperiod: 0});
 var countrynames = require('countrynames');
 
-var cluster = require('cluster');
-var numCPUs = require('os').cpus().length;
 
-if (cluster.isMaster) {
-  // Fork workers.
-  for (var i = 0; i < numCPUs; i++) {
-    cluster.fork();
-  }
+var app = express();
 
-  cluster.on('exit', function (worker, code, signal) {
-    console.log('worker ' + worker.process.pid + ' died');
-  });
-} else {
+// server our public shitz
+app.use(express.static('public'));
 
-  var app = express();
+var lfm = new LastfmAPI({
+  'api_key': process.env.LFM_KEY,
+  'secret': process.env.LFM_SECRET
+});
 
-  // server our public shitz
-  app.use(express.static('public'));
+var echo = echojs({
+  key: process.env.ECHONEST_KEY
+});
 
-  var lfm = new LastfmAPI({
-    'api_key': process.env.LFM_KEY,
-    'secret': process.env.LFM_SECRET
-  });
+var spotify = new SpotifyWebApi();
+// configure app to use bodyParser()
+// this will let us get the data from a POST
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
-  var echo = echojs({
-    key: process.env.ECHONEST_KEY
-  });
+var port = process.env.PORT || 8080;        // set our port
 
-  var spotify = new SpotifyWebApi();
-  // configure app to use bodyParser()
-  // this will let us get the data from a POST
-  app.use(bodyParser.urlencoded({extended: true}));
-  app.use(bodyParser.json());
+var router = express.Router();
 
-  var port = process.env.PORT || 8080;        // set our port
-
-  var router = express.Router();
-
-  router.get('/users/:user/:period?', function (req, res) {
-    var period = req.params.period || 'overall';
-    lfm.user.getTopArtists({user: req.params.user, period: period, limit: 100}, function (err, artists) {
-      var promises = [];
-      if (err) {
-        return console.log('getTopArtists failed', err);
-      }
-      var rank = {};
-      artists['artist'].forEach(function (artist, index) {
+router.get('/users/:user/:period?', function (req, res) {
+  var period = req.params.period || 'overall';
+  lfm.user.getTopArtists({user: req.params.user, period: period, limit: 100}, function (err, artists) {
+    var promises = [];
+    if (err) {
+      return console.log('getTopArtists failed', err);
+    }
+    var rank = {};
+    artists['artist'].forEach(function (artist, index) {
         var name = artist.name;
         rank[name] = index;
         console.log("Querying: " + name);
         var deferred = Q.defer();
         promises.push(deferred.promise);
-        echo('artist/profile').get({name: name, bucket: 'artist_location'},
-          function (err, json) {
-            var timer = setTimeout(deferred.resolve, 2000);
-            if (err || !json.response.artist || !json.response.artist.artist_location || !json.response.artist.artist_location.country) {
-              console.log('Echo failed for artist: ' + name, err);
-              clearTimeout(timer);
-              deferred.resolve();
-            }
-            else {
-              console.log(name + ' -> ' + json.response['artist']['artist_location']['country']);
-              clearTimeout(timer);
-              deferred.resolve({
-                artist: name,
-                country: json.response['artist']['artist_location']['country'],
-                rank: rank[name]
-              });
-            }
-          }
-        )
-      });
-      Q.all(promises).then(function (artists) {
-        var response = {metadata: {}};
-        artists = _.compact(artists);
-        response['artists'] = artists;
-        response['metadata']['countrypercent'] = _.map(_.countBy(artists, "country"), function (value, key) {
-          return {
-            country: key,
-            plays: value,
-            percent: value / artists.length,
-            artists: _.filter(artists, {country: key})
-          }
-        });
-        return res.json(response)
-      });
-    });
-  });
-
-
-  router.get('/countries/:country/:limit?', function (req, res) {
-    //FIXME: lastfmapi (the library) crashes if you send in a limit of only 1, always have at least two tracks in the query.
-    var limit = Math.min(Math.max(req.params.limit || 1, 1), 10) + 1;
-    var promises = [];
-    lfm.geo.getTopTracks({country: req.params.country, limit: limit}, function (err, toptracks) {
-      if (err) {
-        console.log(toptracks);
-        return console.log("Failed to fetch top tracks: " + err);
-      }
-      //FIXME: remove the last track, due to the hack above.
-      toptracks['track'].slice(0, -1).forEach(function (toptrack) {
-        console.log(toptrack);
-        var deferred = Q.defer();
-        promises.push(deferred.promise);
-        spotify.searchTracks('artist:\'' + toptrack.artist.name + '\' track:\'' + toptrack.name + '\'')
-          .then(function (data) {
-            console.log(_.first(data.body.tracks.items).preview_url)
-            deferred.resolve({
-              artist: toptrack.artist.name,
-              track: toptrack.name,
-              preview_url: _.first(data.body.tracks.items).preview_url
+        var json = cache.get(name);
+        if (json) {
+          console.log('Loading ' + name + ' from cache');
+          deferred.resolve({
+            artist: name,
+            country: json.response['artist']['artist_location']['country'],
+            rank: rank[name]
+          });
+        } else {
+          echo('artist/profile').get({name: name, bucket: 'artist_location'},
+            function (err, json) {
+              var timer = setTimeout(deferred.resolve, 2000);
+              if (err || !json.response.artist || !json.response.artist.artist_location || !json.response.artist.artist_location.country) {
+                console.log('Echo failed for artist: ' + name, err);
+                clearTimeout(timer);
+                deferred.resolve();
+              }
+              else {
+                console.log(name + ' -> ' + json.response['artist']['artist_location']['country']);
+                clearTimeout(timer);
+                cache.set(name, json);
+                deferred.resolve({
+                  artist: name,
+                  country: json.response['artist']['artist_location']['country'],
+                  rank: rank[name]
+                });
+              }
             })
-          }, function (err) {
-            console.error(err);
-            deferred.resolve()
-          });
+        }
+      }
+    );
+
+    Q.all(promises).then(function (artists) {
+      var response = {metadata: {}};
+      artists = _.compact(artists);
+      response['artists'] = artists;
+      response['metadata']['countrypercent'] = _.map(_.countBy(artists, "country"), function (value, key) {
+        return {
+          country: key,
+          plays: value,
+          percent: value / artists.length,
+          artists: _.filter(artists, {country: key})
+        }
       });
-      Q.all(promises).then(function (toptracks) {
-        var response = {metadata: {}};
-        toptracks = _.compact(toptracks);
-        response['toptracks'] = toptracks;
-        return res.json(response)
-      });
+      return res.json(response)
     });
   });
+});
 
-  router.get('/toptracks/:artist/:countryName', function (req, res) {
-    var artist = req.params.artist;
-    var countryCode = countrynames.getCode(req.params.countryName);
-    console.log(countryCode);
-    // get the artist id
-    spotify.searchArtists(artist)
-      .then(function (data) {
 
-        spotify.getArtistTopTracks(data.body.artists.items[0].id, countryCode)
-          .then(function (data) {
-            console.log(data);
-            return res.json(data);
-
-            // get top tracks for this artist
-
-            // console.log(_.first(data.body.tracks.items).preview_url)
-            //     deferred.resolve({
-            //       artist: toptrack.artist.name,
-            //       track: toptrack.name,
-            //       preview_url: _.first(data.body.tracks.items).preview_url
-            //     })
-          }, function (err) {
-            console.error(err);
-          });
-      }, function (err) {
-        console.error(err);
-      });
-
+router.get('/countries/:country/:limit?', function (req, res) {
+  //FIXME: lastfmapi (the library) crashes if you send in a limit of only 1, always have at least two tracks in the query.
+  var limit = Math.min(Math.max(req.params.limit || 1, 1), 10) + 1;
+  var promises = [];
+  lfm.geo.getTopTracks({country: req.params.country, limit: limit}, function (err, toptracks) {
+    if (err) {
+      console.log(toptracks);
+      return console.log("Failed to fetch top tracks: " + err);
+    }
+    //FIXME: remove the last track, due to the hack above.
+    toptracks['track'].slice(0, -1).forEach(function (toptrack) {
+      console.log(toptrack);
+      var deferred = Q.defer();
+      promises.push(deferred.promise);
+      spotify.searchTracks('artist:\'' + toptrack.artist.name + '\' track:\'' + toptrack.name + '\'')
+        .then(function (data) {
+          console.log(_.first(data.body.tracks.items).preview_url)
+          deferred.resolve({
+            artist: toptrack.artist.name,
+            track: toptrack.name,
+            preview_url: _.first(data.body.tracks.items).preview_url
+          })
+        }, function (err) {
+          console.error(err);
+          deferred.resolve()
+        });
+    });
+    Q.all(promises).then(function (toptracks) {
+      var response = {metadata: {}};
+      toptracks = _.compact(toptracks);
+      response['toptracks'] = toptracks;
+      return res.json(response)
+    });
   });
+});
 
-  router.get('/availablemarkets', function (req, res) {
-    spotify.getArtistTopTracks('43ZHCT0cAZBISjO8DG9PnE', "SE")
-      .then(function (data) {
-        return res.json(_.first(data.body.tracks).available_markets);
-      }, function (err) {
-        console.error(err);
-      });
-  }, function (err) {
-    console.error(err);
-  });
+router.get('/toptracks/:artist/:countryName', function (req, res) {
+  var artist = req.params.artist;
+  var countryCode = countrynames.getCode(req.params.countryName);
+  console.log(countryCode);
+  // get the artist id
+  spotify.searchArtists(artist)
+    .then(function (data) {
+
+      spotify.getArtistTopTracks(data.body.artists.items[0].id, countryCode)
+        .then(function (data) {
+          console.log(data);
+          return res.json(data);
+
+          // get top tracks for this artist
+
+          // console.log(_.first(data.body.tracks.items).preview_url)
+          //     deferred.resolve({
+          //       artist: toptrack.artist.name,
+          //       track: toptrack.name,
+          //       preview_url: _.first(data.body.tracks.items).preview_url
+          //     })
+        }, function (err) {
+          console.error(err);
+        });
+    }, function (err) {
+      console.error(err);
+    });
+
+});
+
+router.get('/availablemarkets', function (req, res) {
+  spotify.getArtistTopTracks('43ZHCT0cAZBISjO8DG9PnE', "SE")
+    .then(function (data) {
+      return res.json(_.first(data.body.tracks).available_markets);
+    }, function (err) {
+      console.error(err);
+    });
+}, function (err) {
+  console.error(err);
+});
 
 
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-  app.use('/api', apicache('30 minutes'), router);
+app.use('/api', router);
 
-  app.listen(port);
-  console.log('Magic happens on port ' + port);
-}
+//app.use('/api', apicache('30 minutes'), router);
+
+app.listen(port);
+console.log('Magic happens on port ' + port);

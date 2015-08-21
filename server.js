@@ -5,8 +5,9 @@ var echojs = require('echojs');
 var Q = require('q');
 var _ = require('lodash');
 var SpotifyWebApi = require('spotify-web-api-node');
-var apicache = require('apicache').options({debug: true}).middleware;
-var cache = new (require("node-cache"))({stdTTL: 0, checkperiod: 0});
+var apicache  = require('apicache');
+var apicachemw = apicache.options({debug: true}).middleware;
+var echonestcache = new (require("node-cache"))({stdTTL: 0, checkperiod: 0});
 var countrynames = require('countrynames');
 
 
@@ -48,7 +49,7 @@ router.get('/users/:user/:period?', function (req, res) {
         console.log("Querying: " + name);
         var deferred = Q.defer();
         promises.push(deferred.promise);
-        var json = cache.get(name);
+        var json = echonestcache.get(name);
         if (json) {
           console.log('Loading ' + name + ' from cache');
           deferred.resolve({
@@ -68,7 +69,7 @@ router.get('/users/:user/:period?', function (req, res) {
               else {
                 console.log(name + ' -> ' + json.response['artist']['artist_location']['country']);
                 clearTimeout(timer);
-                cache.set(name, json);
+                echonestcache.set(name, json);
                 deferred.resolve({
                   artist: name,
                   country: json.response['artist']['artist_location']['country'],
@@ -182,9 +183,20 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use('/api', router);
 
-//app.use('/api', apicache('30 minutes'), router);
+var cacherouter = express.Router();
+
+
+cacherouter.get('/clear/:user?', function (req, res) {
+  if (req.params.user) {
+    return res.json(apicache.clear("/users/" + req.params.user));
+  } else {
+    return res.json(apicache.clear());
+  }
+});
+
+app.use('/_cache', cacherouter);
+app.use('/api', apicachemw('30 minutes'), router);
 
 app.listen(port);
 console.log('Magic happens on port ' + port);

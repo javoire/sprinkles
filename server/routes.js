@@ -1,20 +1,11 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var LastfmAPI = require('lastfmapi');
-var echojs = require('echojs');
-var Q = require('q');
-var _ = require('lodash');
+var express       = require('express');
+var LastfmAPI     = require('lastfmapi');
+var echojs        = require('echojs');
+var Q             = require('q');
 var SpotifyWebApi = require('spotify-web-api-node');
-var apicache  = require('apicache');
-var apicachemw = apicache.options({debug: true}).middleware;
 var echonestcache = new (require("node-cache"))({stdTTL: 0, checkperiod: 0});
-var countrynames = require('countrynames');
-
-
-var app = express();
-
-// server our public shitz
-app.use(express.static('public'));
+var countrynames  = require('countrynames');
+var _             = require('lodash');
 
 var lfm = new LastfmAPI({
   'api_key': process.env.LFM_KEY,
@@ -26,12 +17,6 @@ var echo = echojs({
 });
 
 var spotify = new SpotifyWebApi();
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({extended: true}));
-app.use(bodyParser.json());
-
-var port = process.env.PORT || 8080;        // set our port
 
 var router = express.Router();
 
@@ -176,16 +161,7 @@ router.get('/availablemarkets', function (req, res) {
   console.error(err);
 });
 
-
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-});
-
-
 var cacherouter = express.Router();
-
 
 cacherouter.get('/clear/:user?', function (req, res) {
   if (req.params.user) {
@@ -195,8 +171,7 @@ cacherouter.get('/clear/:user?', function (req, res) {
   }
 });
 
-app.use('/_cache', cacherouter);
-app.use('/api', apicachemw('30 minutes'), router);
-
-app.listen(port);
-console.log('Magic happens on http://localhost:' + port);
+module.exports = {
+  router: router,
+  cacherouter: cacherouter
+};

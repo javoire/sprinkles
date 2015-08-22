@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "LFM_SECRET=16e48c44966f71a927d3f84dc244ddce LFM_KEY=de828165e856a7dedc567a9ccc7e9141 ECHONEST_KEY=YUXXDTGIWCEEKULMT node server.js",
-    "start-dev": "LFM_SECRET=16e48c44966f71a927d3f84dc244ddce LFM_KEY=de828165e856a7dedc567a9ccc7e9141 ECHONEST_KEY=YUXXDTGIWCEEKULMT  nodemon server.js"
+    "start": "LFM_SECRET=16e48c44966f71a927d3f84dc244ddce LFM_KEY=de828165e856a7dedc567a9ccc7e9141 ECHONEST_KEY=YUXXDTGIWCEEKULMT node server/server.js",
+    "start-dev": "LFM_SECRET=16e48c44966f71a927d3f84dc244ddce LFM_KEY=de828165e856a7dedc567a9ccc7e9141 ECHONEST_KEY=YUXXDTGIWCEEKULMT  nodemon server/server.js"
   },
   "repository": {
     "type": "git",

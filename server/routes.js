@@ -6,6 +6,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var echonestcache = new (require("node-cache"))({stdTTL: 0, checkperiod: 0});
 var countrynames  = require('countrynames');
 var _             = require('lodash');
+var logger        = require('./logger')
 
 var lfm = new LastfmAPI({
   'api_key': process.env.LFM_KEY,
@@ -25,18 +26,18 @@ router.get('/users/:user/:period?', function (req, res) {
   lfm.user.getTopArtists({user: req.params.user, period: period, limit: 100}, function (err, artists) {
     var promises = [];
     if (err) {
-      return console.log('getTopArtists failed', err);
+      return logger.warn('getTopArtists failed', err);
     }
     var rank = {};
     artists['artist'].forEach(function (artist, index) {
         var name = artist.name;
         rank[name] = index;
-        console.log("Querying: " + name);
+        logger.info("Querying: " + name);
         var deferred = Q.defer();
         promises.push(deferred.promise);
         var json = echonestcache.get(name);
         if (json) {
-          console.log('Loading ' + name + ' from cache');
+          logger.info('Loading ' + name + ' from cache');
           deferred.resolve({
             artist: name,
             country: json.response['artist']['artist_location']['country'],
@@ -47,12 +48,12 @@ router.get('/users/:user/:period?', function (req, res) {
             function (err, json) {
               var timer = setTimeout(deferred.resolve, 2000);
               if (err || !json.response.artist || !json.response.artist.artist_location || !json.response.artist.artist_location.country) {
-                console.log('Echo failed for artist: ' + name, err);
+                logger.warn('Echo failed for artist: ' + name, err);
                 clearTimeout(timer);
                 deferred.resolve();
               }
               else {
-                console.log(name + ' -> ' + json.response['artist']['artist_location']['country']);
+                logger.info(name + ' -> ' + json.response['artist']['artist_location']['country']);
                 clearTimeout(timer);
                 echonestcache.set(name, json);
                 deferred.resolve({
@@ -90,24 +91,23 @@ router.get('/countries/:country/:limit?', function (req, res) {
   var promises = [];
   lfm.geo.getTopTracks({country: req.params.country, limit: limit}, function (err, toptracks) {
     if (err) {
-      console.log(toptracks);
-      return console.log("Failed to fetch top tracks: " + err);
+      return logger.warn("Failed to fetch top tracks: " + err, toptracks);
     }
     //FIXME: remove the last track, due to the hack above.
     toptracks['track'].slice(0, -1).forEach(function (toptrack) {
-      console.log(toptrack);
+      logger.info(toptrack);
       var deferred = Q.defer();
       promises.push(deferred.promise);
       spotify.searchTracks('artist:\'' + toptrack.artist.name + '\' track:\'' + toptrack.name + '\'')
         .then(function (data) {
-          console.log(_.first(data.body.tracks.items).preview_url)
+          logger.info(_.first(data.body.tracks.items).preview_url)
           deferred.resolve({
             artist: toptrack.artist.name,
             track: toptrack.name,
             preview_url: _.first(data.body.tracks.items).preview_url
           })
         }, function (err) {
-          console.error(err);
+          logger.error(err);
           deferred.resolve()
         });
     });
@@ -123,29 +123,29 @@ router.get('/countries/:country/:limit?', function (req, res) {
 router.get('/toptracks/:artist/:countryName', function (req, res) {
   var artist = req.params.artist;
   var countryCode = countrynames.getCode(req.params.countryName);
-  console.log(countryCode);
+  logger.info(countryCode);
   // get the artist id
   spotify.searchArtists(artist)
     .then(function (data) {
 
       spotify.getArtistTopTracks(data.body.artists.items[0].id, countryCode)
         .then(function (data) {
-          console.log(data);
+          logger.info(data);
           return res.json(data);
 
           // get top tracks for this artist
 
-          // console.log(_.first(data.body.tracks.items).preview_url)
+          // logger.info(_.first(data.body.tracks.items).preview_url)
           //     deferred.resolve({
           //       artist: toptrack.artist.name,
           //       track: toptrack.name,
           //       preview_url: _.first(data.body.tracks.items).preview_url
           //     })
         }, function (err) {
-          console.error(err);
+          logger.error(err);
         });
     }, function (err) {
-      console.error(err);
+      logger.error(err);
     });
 
 });
@@ -155,10 +155,10 @@ router.get('/availablemarkets', function (req, res) {
     .then(function (data) {
       return res.json(_.first(data.body.tracks).available_markets);
     }, function (err) {
-      console.error(err);
+      logger.error(err);
     });
 }, function (err) {
-  console.error(err);
+  logger.error(err);
 });
 
 var cacherouter = express.Router();

@@ -1,8 +1,9 @@
 var express    = require('express');
 var bodyParser = require('body-parser');
-var routes     = require('./routes');
 var apicache   = require('apicache');
 var apicachemw = apicache.options({debug: true}).middleware;
+var routes     = require('./routes');
+var logger     = require('./logger')
 
 var app  = express();
 var port = process.env.PORT || 8080;
@@ -26,4 +27,4 @@ app.use('/_cache', routes.cacherouter);
 app.use('/api', apicachemw('30 minutes'), routes.router);
 
 app.listen(port);
-console.log('Magic happens on http://localhost:' + port);
+logger.info('Magic happens on http://localhost:' + port);

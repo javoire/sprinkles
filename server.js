@@ -199,4 +199,4 @@ app.use('/_cache', cacherouter);
 app.use('/api', apicachemw('30 minutes'), router);
 
 app.listen(port);
-console.log('Magic happens on port ' + port);
+console.log('Magic happens on http://localhost:' + port);

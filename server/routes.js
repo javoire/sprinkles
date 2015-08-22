@@ -123,7 +123,6 @@ router.get('/countries/:country/:limit?', function (req, res) {
 router.get('/toptracks/:artist/:countryName', function (req, res) {
   var artist = req.params.artist;
   var countryCode = countrynames.getCode(req.params.countryName);
-  logger.info(countryCode);
   // get the artist id
   spotify.searchArtists(artist)
     .then(function (data) {

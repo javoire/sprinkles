@@ -130,7 +130,6 @@ router.get('/toptracks/:artist/:countryName', function (req, res) {
 
       spotify.getArtistTopTracks(data.body.artists.items[0].id, countryCode)
         .then(function (data) {
-          logger.info(data);
           return res.json(data);
 
           // get top tracks for this artist

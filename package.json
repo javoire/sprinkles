@@ -1,6 +1,6 @@
 {
   "name": "sprinkles",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "Add song sprinles on map",
   "main": "index.js",
   "scripts": {

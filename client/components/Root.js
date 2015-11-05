@@ -16,16 +16,10 @@ module.exports = React.createClass({
     };
   },
   handleUsernameSubmit: function(username) {
-    console.log('submitted form', username);
-
     var _this = this;
-
     $.get('/api/users/' + username, function(res) {
       _this.setState({userCountryData: res.metadata.countrypercent});
     })
-
-    // set data state to globe
-    // set data state to artist list
   },
   render: function () {
     return (

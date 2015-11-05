@@ -11,14 +11,9 @@ if (!Detector.webgl) {
   // Start app
   // show welcome screen
   d3.json('data/world.json', function (err, data) {
-
     ReactDom.render(
       <Root worldData={data} />,
       document.getElementById('root')
     );
-
-    // globe = renderGlobe(data);
-    // globe.animate();
-    // welcomeScreen();
   });
 }

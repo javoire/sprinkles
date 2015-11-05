@@ -111,7 +111,7 @@ DAT.Globe = function (container, opts) {
     uniforms = THREE.UniformsUtils.clone(shader.uniforms);
 
     // base sphere
-    uniforms['texture'].value = opts.myCoolTexture;
+    uniforms['texture'].value = createMapTexture(opts.countries, '#222', 'black');
 
     material = new THREE.ShaderMaterial({
       uniforms: uniforms,
@@ -384,9 +384,72 @@ DAT.Globe = function (container, opts) {
     renderer.render(scene, camera);
   }
 
+  function paintCountyTextures(data, geo) {
+    var baseRed = 46;
+    var baseGreen = 189;
+    var baseBlue = 89;
+    var textures = [];
+    data.sort(function (a, b) {
+      return b.percent - a.percent;
+    });
+    var maxval = data[0].percent * 100;
+    data.forEach(function (country) {
+      var countryGeojson = geo.find(country.country);
+      if (countryGeojson) {
+        var alpha = country.percent * 100 / maxval;
+        var rgb = 'rgba(' + baseRed + ', ' + baseGreen + ', ' + baseBlue + ', ' + alpha + ')';
+        console.log(rgb);
+        textures.push(createMapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black'));
+      }
+    });
+
+    this.updateOverlays(textures);
+  }
+
+  function createMapTexture(geojson, color, strokeColor) {
+    var texture, context, canvas;
+
+    // map hackery
+    var projection = d3.geo.equirectangular()
+      .translate([2048, 1024])
+      .scale(650);
+
+    canvas = d3.select("body").append("canvas")
+      .style("display", "none")
+      .attr("width", "4096px")
+      .attr("height", "2048px");
+
+    context = canvas.node().getContext("2d");
+
+    var path = d3.geo.path()
+      .projection(projection)
+      .context(context);
+
+    context.strokeStyle = strokeColor || "#333";
+    context.lineWidth = 1;
+    context.fillStyle = color || "#CDB380";
+
+    context.beginPath();
+
+    path(geojson);
+
+    if (color) {
+      context.fill();
+    }
+
+    context.stroke();
+
+    texture = new THREE.Texture(canvas.node());
+    texture.needsUpdate = true;
+
+    canvas.remove();
+
+    return texture;
+  }
+
   init();
   this.animate = animate;
-
+  this.paintCountyTextures = paintCountyTextures;
 
   this.__defineGetter__('time', function () {
     return this._time || 0;

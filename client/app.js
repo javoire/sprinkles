@@ -3,8 +3,7 @@
 var ReactDom = require('react-dom');
 var React = require('react');
 var Detector = require('./lib/Detector');
-var WelcomeScreen = require('./components/WelcomeScreen');
-var Globe = require('./components/Globe');
+var Root = require('./components/Root');
 
 if (!Detector.webgl) {
   Detector.addGetWebGLMessage();
@@ -14,10 +13,7 @@ if (!Detector.webgl) {
   d3.json('data/world.json', function (err, data) {
 
     ReactDom.render(
-      <div className="main">
-        <WelcomeScreen />
-        <Globe worldData={data} />
-      </div>,
+      <Root worldData={data} />,
       document.getElementById('root')
     );
 

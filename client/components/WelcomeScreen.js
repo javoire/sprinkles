@@ -6,11 +6,10 @@ module.exports = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var username = this.refs.username.value.trim();
-
     if (!username) {
       return;
     }
-    // TODO: send request to the server
+    this.props.onUsernameSubmit(username);
     return;
   },
   render: function () {

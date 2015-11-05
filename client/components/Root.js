@@ -8,9 +8,7 @@ var $ = require('jquery');
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {
-      worldData: this.props.worldData
-    };
+    return {}
   },
   handleUsernameSubmit: function(username) {
     var _this = this;
@@ -22,7 +20,7 @@ module.exports = React.createClass({
     return (
       <div>
         <WelcomeScreen onUsernameSubmit={this.handleUsernameSubmit} />
-        <Globe worldData={this.state.worldData} userCountryData={this.state.userCountryData} />
+        <Globe userCountryData={this.state.userCountryData} />
       </div>
     )
   }

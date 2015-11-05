@@ -4,15 +4,18 @@ var React = require('react');
 var ReactDom = require('react-dom')
 var GlobeFactory = require('../lib/GlobeFactory');
 var geodecoder = require('../lib/geodecoder');
+var worldDataStore = require('../store/worldDataStore');
 
 module.exports = React.createClass({
   componentDidMount: function() {
-    var countries = topojson.feature(this.props.worldData, this.props.worldData.objects.countries)
+    var worldData = worldDataStore.getData();
+    var countries = topojson.feature(worldData, worldData.objects.countries)
     var element = ReactDom.findDOMNode(this.refs.globe);
 
     globe = GlobeFactory.createGlobe(element, countries)
     globe.animate();
 
+    // TODO: get rid of setting the globe on UI state
     this.setState({globe: globe});
   },
   componentDidUpdate: function() {
@@ -24,7 +27,7 @@ module.exports = React.createClass({
 
     var globe = this.state.globe;
 
-    globe.paintCountyTextures(this.props.userCountryData, this.state.geodecoder);
+    globe.paintCountyTextures(this.props.userCountryData, geodecoder);
 
     // countriesTopList(data);
   },

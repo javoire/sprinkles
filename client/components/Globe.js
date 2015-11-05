@@ -3,17 +3,11 @@
 var React = require('react');
 var ReactDom = require('react-dom')
 var GlobeFactory = require('../lib/GlobeFactory');
+var geodecoder = require('../lib/geodecoder');
 
 module.exports = React.createClass({
-  handleUsernameSubmit: function(e) {
-    e.preventDefault();
-
-    // print textures
-
-    return;
-  },
   componentDidMount: function() {
-    var countries = topojson.feature(this.props.worldData, this.props.worldData.objects.countries);
+    var countries = topojson.feature(this.props.worldData, this.props.worldData.objects.countries)
     var element = ReactDom.findDOMNode(this.refs.globe);
 
     globe = GlobeFactory.createGlobe(element, countries)
@@ -30,7 +24,7 @@ module.exports = React.createClass({
 
     var globe = this.state.globe;
 
-    globe.paintCountyTextures(this.props.userCountryData, this.props.geo);
+    globe.paintCountyTextures(this.props.userCountryData, this.state.geodecoder);
 
     // countriesTopList(data);
   },

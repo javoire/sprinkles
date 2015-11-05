@@ -1,12 +1,12 @@
-module.exports = function(features) {
+var store = {};
 
-  var store = {};
-
-  for (var i = 0; i < features.length; i++) {
-    store[features[i].id.toLowerCase()] = features[i];
-  }
-
+module.exports = function() {
   return {
+    init: function(features) {
+      for (var i = 0; i < features.length; i++) {
+        store[features[i].id.toLowerCase()] = features[i];
+      }
+    },
     find: function (id) {
       return store[id.toLowerCase()];
     },

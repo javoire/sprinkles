@@ -403,7 +403,7 @@ DAT.Globe = function (container, opts) {
       }
     });
 
-    this.updateOverlays(textures);
+    updateOverlays(textures);
   }
 
   function createMapTexture(geojson, color, strokeColor) {
@@ -448,8 +448,6 @@ DAT.Globe = function (container, opts) {
   }
 
   init();
-  this.animate = animate;
-  this.paintCountyTextures = paintCountyTextures;
 
   this.__defineGetter__('time', function () {
     return this._time || 0;
@@ -486,7 +484,7 @@ DAT.Globe = function (container, opts) {
     if (!countryGeojson) return;
 
     var rgb = "rgba(255, 255, 255, 0.7)";
-    var highlightTexture = mapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black');
+    var highlightTexture = createMapTexture({features: [countryGeojson], type: "FeatureCollection"}, rgb, 'black');
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
     shader = Shaders['earth'];
@@ -505,14 +503,6 @@ DAT.Globe = function (container, opts) {
     highLightedCountry.scale.set(1.001, 1.001, 1.001);
     scene.add(highLightedCountry);
   }
-
-  this.highLightCountry = highLightCountry;
-  this.addData = addData;
-  this.createPoints = createPoints;
-  this.renderer = renderer;
-  this.scene = scene;
-  this.updateOverlays = updateOverlays;
-  this.target = target;
 
   function updateOverlays(overlayTextures) {
 
@@ -534,6 +524,17 @@ DAT.Globe = function (container, opts) {
 
 
   }
+
+  // public interface
+  this.animate = animate;
+  this.paintCountyTextures = paintCountyTextures;
+  this.highLightCountry = highLightCountry;
+  this.addData = addData;
+  this.createPoints = createPoints;
+  this.renderer = renderer;
+  this.scene = scene;
+  this.updateOverlays = updateOverlays;
+  this.target = target;
 
   return this;
 

@@ -46,7 +46,6 @@ function renderSpotifyDataOnGlobe(countryCodes) {
 
   var countriesGeoJson = {features: [], type: "FeatureCollection"};
 
-
   countryCodes.forEach(function (countryCode) {
 
     console.log(ISO3166.codeToCountry[countryCode]);

@@ -58,3 +58,5 @@ Detector = {
   }
 
 };
+
+module.exports = Detector;

@@ -26,5 +26,6 @@ app.use(function (req, res, next) {
 app.use('/_cache', routes.cacherouter);
 app.use('/api', apicachemw('30 minutes'), routes.router);
 
-app.listen(port);
-logger.info('Magic happens on http://localhost:' + port);
+app.listen(port, function(){
+  logger.info('Magic happens on http://localhost:' + port);  
+});

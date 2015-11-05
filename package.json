@@ -1,7 +1,7 @@
 {
   "name": "sprinkles",
   "version": "0.3.3",
-  "description": "Add song sprinles on map",
+  "description": "Add song sprinkles on map",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -34,6 +34,11 @@
     "lodash": "^3.10.1",
     "node-cache": "^3.0.0",
     "q": "^1.4.1",
+    "react": "^0.14.2",
+    "react-addons": "^0.9.1-deprecated",
+    "react-dom": "^0.14.2",
+    "react-tools": "^0.12.2",
+    "reactify": "0.15.2",
     "spotify-web-api-node": "^2.1.0",
     "whatwg-fetch": "^0.9.0",
     "winston": "^1.0.1"

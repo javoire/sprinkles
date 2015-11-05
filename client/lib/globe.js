@@ -476,3 +476,4 @@ DAT.Globe = function (container, opts) {
 
 }
 
+module.exports = DAT;

@@ -14,7 +14,7 @@ if (!Detector.webgl) {
   worldDataStore.init(function(data) {
 
     // initialize stateful geodecoder
-    var countries = topojson.feature(data, data.objects.countries)
+    var countries = topojson.feature(data, data.objects.countries);
     geodecoder.init(countries.features);
 
     ReactDom.render(

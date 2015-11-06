@@ -384,7 +384,14 @@ DAT.Globe = function (container, opts) {
     renderer.render(scene, camera);
   }
 
-  function paintCountyTextures(data, geo) {
+  /**
+   * Creates one texture layer for each country
+   * and stores them in an array, then sets them on the globe
+   * @param  {Array} data Countries
+   * @param  {Object} geo Geo helper
+   * @return {Array}
+   */
+  function paintCountryTextures(data, geo) {
     var baseRed = 46;
     var baseGreen = 189;
     var baseBlue = 89;
@@ -403,9 +410,16 @@ DAT.Globe = function (container, opts) {
       }
     });
 
-    updateOverlays(textures);
+    updateOverlays(textures); // hmmm
   }
 
+  /**
+   * Generate a canvas (pixel) texture with geojson and d3.js
+   * @param  geojson
+   * @param  color
+   * @param  strokeColor
+   * @return texture        THREE.js texture
+   */
   function createMapTexture(geojson, color, strokeColor) {
     var texture, context, canvas;
 
@@ -447,8 +461,6 @@ DAT.Globe = function (container, opts) {
     return texture;
   }
 
-  init();
-
   this.__defineGetter__('time', function () {
     return this._time || 0;
   });
@@ -477,6 +489,12 @@ DAT.Globe = function (container, opts) {
     this._time = t;
   });
 
+  /**
+   * Creates a new globe mesh with a texture with 1
+   * colored country
+   * @param  {[type]} country [description]
+   * @return {[type]}         [description]
+   */
   function highLightCountry(country) {
     isSpinning = false;
     // TODO: Even if we can't find a geojson for the country, it will still be panned too. This should probably be fixed.
@@ -504,6 +522,10 @@ DAT.Globe = function (container, opts) {
     scene.add(highLightedCountry);
   }
 
+  /**
+   * Creates geometry for each texture and adds to scene
+   * @param  {Array} overlayTextures
+   */
   function updateOverlays(overlayTextures) {
 
     var geometry = new THREE.SphereGeometry(200, 40, 30);
@@ -521,13 +543,13 @@ DAT.Globe = function (container, opts) {
       overlayGroup.add(overlayMesh);
       scene.add(overlayGroup);
     })
-
-
   }
+
+  init();
 
   // public interface
   this.animate = animate;
-  this.paintCountyTextures = paintCountyTextures;
+  this.paintCountryTextures = paintCountryTextures;
   this.highLightCountry = highLightCountry;
   this.addData = addData;
   this.createPoints = createPoints;

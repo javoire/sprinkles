@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
 
 var React = require('react');
+var classNames = require('classnames');
 
 module.exports = React.createClass({
   handleSubmit: function(e) {

@@ -10,4 +10,4 @@ RUN ./node_modules/gulp/bin/gulp.js build
 
 CMD ["npm", "start"]
 
-EXPOSE 4444
+EXPOSE 8080

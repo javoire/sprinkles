@@ -8,6 +8,8 @@ RUN npm install --unsafe-perm .
 RUN ./node_modules/bower/bin/bower install --allow-root --config.interactive=false
 RUN ./node_modules/gulp/bin/gulp.js build
 
+ENV PORT=80
+
 CMD ["npm", "start"]
 
-EXPOSE 8080
+EXPOSE 80
